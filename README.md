@@ -12,8 +12,12 @@ You'll need to install this module for the Arduino IDE and Visual Micro in order
 
 Diagrams are made with KiCad (free and open source, http://kicad-pcb.org/download/)
 
-# External Library
-I use the following libraries:
+# External Library 
+I use the following libraries for the code:
  - Wire
  - Keypad and Keypad MC17
  - LiquidCrystal
+ 
+ I use the following library for Kicad:
+  - https://github.com/MarginallyClever/kicad-ESP8266
+  - https://github.com/mikepurvis/kicad-library-foo/blob/master/MCP23017.lib
