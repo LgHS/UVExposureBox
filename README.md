@@ -16,7 +16,8 @@ Diagrams are made with KiCad (free and open source, http://kicad-pcb.org/downloa
 I use the following libraries for the code:
  - Wire
  - Keypad and Keypad MC17 (https://github.com/joeyoung/arduino_keypads/)
- - LiquidCrystal
+ - LiquidCrystal_I2C
+ - LiquidMenu (To use an I2C connection you need to define I2C as "true" in the "LiquidMenu_config.h" file)
  
  I use the following library for Kicad:
   - Node MCU : https://github.com/MarginallyClever/kicad-ESP8266
