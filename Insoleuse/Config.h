@@ -13,16 +13,19 @@
 #define LCD_ROW 4
 #define LCD_COL 20
 
-struct GPIO {
-	int Relay = D8;
-	int Piezo = D7;
-	int ReedSwitch = D6;
+enum GPIO {
+	RelayPin = D8,
+	PiezoPin = D7,
+	ReedSwitchPin = D6,
 };
 
 #define WELCOME_SCREEN 0
 #define HOME_SCREEN 1
 #define START_SCREEN 2
 #define SETTING_SCREEN 3
+#define COUNTDOWN_SCREEN 4
+
+#define JOB_REFRESH_RATE 10
 
 #endif
 

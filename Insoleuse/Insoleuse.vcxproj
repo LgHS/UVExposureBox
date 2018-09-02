@@ -113,17 +113,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config.h" />
+    <ClInclude Include="Job.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="LiquidMenu\src\glyphs.h" />
     <ClInclude Include="LiquidMenu\src\LiquidMenu.h" />
     <ClInclude Include="LiquidMenu\src\LiquidMenu_config.h" />
     <ClInclude Include="LiquidMenu\src\LiquidMenu_debug.h" />
     <ClInclude Include="Menu.h" />
-    <ClInclude Include="MenuFunctions.h" />
-    <ClInclude Include="Screens.h" />
+    <ClInclude Include="Piezo.h" />
+    <ClInclude Include="ReedSwitchSecurity.h" />
+    <ClInclude Include="UVStrip.h" />
     <ClInclude Include="__vm\.Insoleuse.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Job.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="LiquidMenu\src\LiquidLine.cpp" />
     <ClCompile Include="LiquidMenu\src\LiquidMenu.cpp" />

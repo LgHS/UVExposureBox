@@ -48,10 +48,16 @@
     <ClInclude Include="LiquidMenu\src\LiquidMenu_config.h">
       <Filter>Header Files\LiquidMenu</Filter>
     </ClInclude>
-    <ClInclude Include="MenuFunctions.h">
+    <ClInclude Include="Job.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Screens.h">
+    <ClInclude Include="UVStrip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Piezo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReedSwitchSecurity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -76,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="LiquidMenu\src\recognizeType.cpp">
       <Filter>Source Files\LiquidMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="Job.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

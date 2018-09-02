@@ -45,6 +45,8 @@ void Start_Do_D8();
 void Start_Do_D9();
 void PushNumber(char newNumber);
 bool IsValidDigitalInput(char c, int position);
+void Countdown_Do_D();
+void Countdown_Do_C();
 
 class WelcomeScreen {
 private:
@@ -73,11 +75,11 @@ public:
 class StartScreen {
 private:
 	LiquidLine* start_line1 = new LiquidLine(0, 0, "Select your time");
-	LiquidLine* start_line2 = new LiquidLine(0, 1, "", Time);
+	LiquidLine* start_line2 = new LiquidLine(0, 1, StartScreenTime);
 	LiquidLine* start_line3 = new LiquidLine(0, 2, "A:Start");
 	LiquidLine* start_line4 = new LiquidLine(0, 3, "C:Clear D:Return");
 public:
-	char* Time;
+	char* StartScreenTime;
 	LiquidScreen* Screen = new LiquidScreen(*start_line1, *start_line2, *start_line3, *start_line4);
 
 	StartScreen() {
@@ -95,6 +97,21 @@ public:
 		this->Screen->attach_function(KPD8, Start_Do_D8);
 		this->Screen->attach_function(KPD9, Start_Do_D9);
 	}
+};
+
+class CountdownScreen {
+private:
+	LiquidLine* line1 = new LiquidLine(0, 0, "UV running");
+	LiquidLine* line2 = new LiquidLine(0, 1, "Do not open");
+	LiquidLine* line3 = new LiquidLine(0, 2, "Time rem.", CountdownTime);
+	LiquidLine* line4 = new LiquidLine(0, 3, "C:Cancel D:Pause");
+public:
+	char* CountdownTime;
+	CountdownScreen() {
+		this->Screen->attach_function(KPC, Countdown_Do_C);
+		this->Screen->attach_function(KPD, Countdown_Do_D);
+	}
+	LiquidScreen* Screen = new LiquidScreen(*line1, *line2, *line3, *line4);
 };
 
 class SettingScreen {
@@ -118,17 +135,18 @@ public:
 	void Navigate(int screen);
 	void UpdateTime(char* time);
 	void Update();
+	int GetSeconds();
+	void SetCountdown(int countdown);
+	void CleanLCDVariable();
 
 	const char timeTemplate[8] = {'h','h',':','m','m',':','s','s'};
 	char remainingTime[8];
+	char remainingCountdownTime[8];
 
+	int CurrentScreen = -1;
 private:
 	ApplicationMenu();
-
-	int currentScreen = -1;
-
-	GPIO* gpio = new GPIO();
-
+	
 	Keyboard* keyboard = new Keyboard();
 
 	LiquidCrystal_I2C*  lcd = new LiquidCrystal_I2C(I2CADDR_LCD, LCD_COL, LCD_ROW);
@@ -137,6 +155,7 @@ private:
 	WelcomeScreen* welcomeScreen = new WelcomeScreen();
 	StartScreen* startScreen = new StartScreen();
 	SettingScreen* settingScreen = new SettingScreen();
+	CountdownScreen* countdownScreen = new CountdownScreen();
 
 	LiquidMenu* menu = new LiquidMenu(*lcd);
 };
