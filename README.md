@@ -17,7 +17,7 @@ I use the following libraries for the code:
  - Wire
  - Keypad and Keypad MC17 (https://github.com/joeyoung/arduino_keypads/)
  - LiquidCrystal_I2C
- - LiquidMenu (https://github.com/VaSe7u/LiquidMenu, To use an I2C connection you need to define I2C as "true" in the "LiquidMenu_config.h" file)
+ - I've written a fork of LiquidMenu that add global functions to screens for easier navigation, I don't have to mess with lines and pointers to execute binded UI logic, the code is included with the sources.
  - Timer Library for Arduino (https://github.com/JChristensen/Timer)
  
  I use the following library for Kicad:
