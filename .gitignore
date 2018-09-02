@@ -5,16 +5,11 @@
 /Insoleuse/Debug
 /Insoleuse/LiquidMenu/doc
 /Insoleuse/LiquidMenu/examples
-/Insoleuse/__vm/Upload.vmps.xml
-/Insoleuse/__vm/Configuration.Debug.vmps.xml
-/Insoleuse/__vm/Compile.vmps.xml
-/Insoleuse/__vm/.Insoleuse.vsarduino.h
 /Insoleuse/__vm
 /Insoleuse/LiquidMenu/_config.yml
 /Insoleuse/LiquidMenu/README.md
 /Insoleuse/LiquidMenu/LICENSE
 /Insoleuse/LiquidMenu/library.properties
 /Insoleuse/LiquidMenu/keywords.txt
-/Insoleuse/LiquidMenu
-/.vs/Insoleuse/v15
+/.vs/
 /Schematics/Insoleuse/_saved_Insoleuse.sch
