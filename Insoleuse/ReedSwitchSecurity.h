@@ -8,6 +8,7 @@
 #include "Config.h"
 #include "Job.h"
 #include "Menu.h"
+#include "Piezo.h"
 
 void OnReedSwitchTick();
 
@@ -38,12 +39,14 @@ void OnReedSwitchTick() {
 		if (Job::getInstance().IsRunning && ApplicationMenu::getInstance().CurrentScreen == COUNTDOWN_SCREEN) {
 			Job::getInstance().Stop();
 			ReedSwitchSecurity::getInstance().IsPaused = true;
+			Piezo::getInstance().Tone(C5, 250);
 		}
 	}
 	else if (digitalRead(ReedSwitchPin) && ReedSwitchSecurity::getInstance().IsPaused) {
 		if (!Job::getInstance().IsRunning && ApplicationMenu::getInstance().CurrentScreen == COUNTDOWN_SCREEN) {
 			Job::getInstance().Start();
 			ReedSwitchSecurity::getInstance().IsPaused = false;
+			Piezo::getInstance().Tone(C6, 250);
 		}
 	}
 	else if (ApplicationMenu::getInstance().CurrentScreen != COUNTDOWN_SCREEN && ReedSwitchSecurity::getInstance().IsPaused == true) {

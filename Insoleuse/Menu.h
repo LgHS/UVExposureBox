@@ -103,7 +103,7 @@ class CountdownScreen {
 private:
 	LiquidLine* line1 = new LiquidLine(0, 0, "UV running");
 	LiquidLine* line2 = new LiquidLine(0, 1, "Do not open");
-	LiquidLine* line3 = new LiquidLine(0, 2, "Time rem.", CountdownTime);
+	LiquidLine* line3 = new LiquidLine(0, 2, "Time rem. ", CountdownTime);
 	LiquidLine* line4 = new LiquidLine(0, 3, "C:Cancel D:Pause");
 public:
 	char* CountdownTime;

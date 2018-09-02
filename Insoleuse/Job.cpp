@@ -36,12 +36,12 @@ void Job::Start() {
 }
 
 void Job::Stop() {
+	UVStrip::getInstance().Stop();
 	t.stop(0);
 	if (this->RemainingTime <= 0) {
 		Piezo::getInstance().PlayEndJobTune();
 		ApplicationMenu::getInstance().CleanLCDVariable();
 	}
-	UVStrip::getInstance().Stop();
 	this->IsRunning = false;
 }
 
