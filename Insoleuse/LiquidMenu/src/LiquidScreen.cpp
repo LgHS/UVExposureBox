@@ -125,8 +125,31 @@ void LiquidScreen::switch_focus(bool forward) {
 }
 
 bool LiquidScreen::call_function(uint8_t number) const {
-	if (_focus != _lineCount) {
-		return _p_liquidLine[_focus]->call_function(number);
+	bool result = false;
+	if (_function[number - 1]) {
+		(*_function[number - 1])();
+		result = true;
 	}
-	return false;
+	else {
+		result = false;
+	}
+
+	if (_focus != _lineCount) {
+		result = result || _p_liquidLine[_focus]->call_function(number);
+	}
+	return false || result;
+}
+
+bool LiquidScreen::attach_function(uint8_t number, void(*function)(void)) {
+	print_me((uintptr_t)this);
+	if (number <= MAX_FUNCTIONS) {
+		_function[number - 1] = function;
+		DEBUG(F("Attached function ")); DEBUGLN(number);
+		return true;
+	}
+	else {
+		DEBUG(F("Attaching function ")); DEBUG(number);
+		DEBUGLN(F(" failed, edit LiquidMenu_config.h to allow for more functions"));
+		return false;
+	}
 }

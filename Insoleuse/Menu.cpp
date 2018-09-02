@@ -34,8 +34,8 @@ void ApplicationMenu::Init() {
 
 	this->menu->init();
 
-	//this->home_screen->attach_function(A, Do_A);
-	//this->home_screen->attach_function(B, Do_B);
+	this->home_screen->attach_function(A, Do_A);
+	this->home_screen->attach_function(B, Do_B);
 	
 	this->menu->add_screen(*this->welcome_screen);
 	this->menu->add_screen(*this->home_screen);

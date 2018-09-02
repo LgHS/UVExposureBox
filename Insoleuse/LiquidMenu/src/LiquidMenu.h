@@ -522,6 +522,27 @@ public:
   void hide(bool hide);
   ///@}
 
+	/// Attaches a callback function to the line.
+	/**
+	The number is used for identification. The callback function can
+	later be called when the line is focused with
+	`LiquidMenu::call_function(uint8_t number) const`.
+
+	@param number - function number used for identification
+	@param *function - pointer to the function
+	@returns true on success and false if maximum amount of functions
+	has been reached
+
+	@note Function numbering starts from 1.
+	@note The maximum amount of functions per line is specified in
+	LiquidMenu_config.h as `MAX_FUNCTIONS`. The default is 8.
+
+	@see LiquidMenu_config.h
+	@see MAX_FUNCTIONS
+	@see bool LiquidMenu::call_function(uint8_t number) const
+	*/
+  bool attach_function(uint8_t number, void(*function)(void));
+
 private:
   /// Prints the lines pointed by the screen.
   /**
@@ -554,10 +575,13 @@ private:
   */
   bool call_function(uint8_t number) const;
 
+
+
   LiquidLine *_p_liquidLine[MAX_LINES]; ///< The LiquidLine objects
   uint8_t _lineCount; ///< Count of the LiquidLine objects
   uint8_t _focus; ///< Number representing the focus position
   bool _hidden; ///< If hidden skips this screen when cycling
+  void(*_function[MAX_FUNCTIONS])(void); ///< Pointers to the functions
 };
 
 
