@@ -19,5 +19,10 @@ struct GPIO {
 	int ReedSwitch = D6;
 };
 
+#define WELCOME_SCREEN 0
+#define HOME_SCREEN 1
+#define START_SCREEN 2
+#define SETTING_SCREEN 3
+
 #endif
 

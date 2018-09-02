@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\LiquidMenu">
+      <UniqueIdentifier>{0ee6ff3c-6e47-4348-870e-5e55f81ba2cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LiquidMenu">
+      <UniqueIdentifier>{bd4617de-2a4c-4ab8-a407-e1385997f574}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Insoleuse.ino" />
@@ -31,15 +37,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LiquidMenu\src\glyphs.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\LiquidMenu</Filter>
     </ClInclude>
     <ClInclude Include="LiquidMenu\src\LiquidMenu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LiquidMenu\src\LiquidMenu_config.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\LiquidMenu</Filter>
     </ClInclude>
     <ClInclude Include="LiquidMenu\src\LiquidMenu_debug.h">
+      <Filter>Header Files\LiquidMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="LiquidMenu\src\LiquidMenu_config.h">
+      <Filter>Header Files\LiquidMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Screens.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,23 +62,20 @@
     <ClCompile Include="Keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LiquidMenu-1.3.0\src\LiquidScreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LiquidMenu\src\LiquidLine.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\LiquidMenu</Filter>
     </ClCompile>
     <ClCompile Include="LiquidMenu\src\LiquidMenu.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\LiquidMenu</Filter>
     </ClCompile>
     <ClCompile Include="LiquidMenu\src\LiquidScreen.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\LiquidMenu</Filter>
     </ClCompile>
     <ClCompile Include="LiquidMenu\src\LiquidSystem.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\LiquidMenu</Filter>
     </ClCompile>
     <ClCompile Include="LiquidMenu\src\recognizeType.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\LiquidMenu</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -4,7 +4,8 @@
  Author:	istac
 */
 
-#include "Keyboard.h"
+#include "Screens.h"
+#include "MenuFunctions.h"
 #include "Menu.h"
 #include <Wire.h>
 #include "Config.h"
@@ -50,9 +51,9 @@ void setup()
 }
 
 void UpdateTime() {
-	currentTime += 1;
-	itoa(currentTime, timeString, 10);
-	ApplicationMenu::getInstance().UpdateTime(timeString);
+	//currentTime += 1;
+	//itoa(currentTime, timeString, 10);
+	//ApplicationMenu::getInstance().UpdateTime(timeString);
 }
 
 void UpdateScreen() {
