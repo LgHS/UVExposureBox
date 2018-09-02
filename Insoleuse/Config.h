@@ -10,6 +10,8 @@
 #define VERSION "2.0.1"
 #define KEYPAD_ROW 4
 #define KEYPAD_COL 4
+#define LCD_ROW 4
+#define LCD_COL 20
 
 struct GPIO {
 	int Relay = D8;

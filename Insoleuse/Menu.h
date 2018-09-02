@@ -6,19 +6,36 @@
 #include "Config.h"
 #include <LiquidCrystal_I2C.h>
 #include <LiquidMenu.h>
+#include "Keyboard.h"
+#include <Keypad.h>
+#include <Keypad_MC17.h>
 
 #define WELCOME_SCREEN 0
 #define HOME_SCREEN 1
+
+enum MenuFuction {
+	A = 1,
+	B = 2,
+	C = 3,
+	D = 4
+};
 
 class ApplicationMenu {
 public:
 	ApplicationMenu();
 	void Init();
 	void Navigate(int screen);
+	void UpdateTime(char* time);
+	void Update();
 private:
 	int currentScreen = -1;
+	char* time;
 
-	LiquidCrystal_I2C*  lcd = new LiquidCrystal_I2C(I2CADDR_LCD, 20, 4);
+	GPIO* gpio = new GPIO();
+
+	Keyboard* keyboard = new Keyboard();
+
+	LiquidCrystal_I2C*  lcd = new LiquidCrystal_I2C(I2CADDR_LCD, LCD_COL, LCD_ROW);
 
 	LiquidLine* welcome_line1 = new LiquidLine(0, 0, "Insoleuse v", VERSION);
 	LiquidLine* welcome_line2 = new LiquidLine(0, 1, "Build by LGHS");
@@ -30,7 +47,8 @@ private:
 	LiquidLine* home_line1 = new LiquidLine(0, 0, "Select your option");
 	LiquidLine* home_line2 = new LiquidLine(0, 1, "A - Start");
 	LiquidLine* home_line3 = new LiquidLine(0, 2, "B - Settings");
-	LiquidScreen* home_screen = new LiquidScreen(*home_line1, *home_line2, *home_line3);
+	LiquidLine* home_line4 = new LiquidLine(0, 3, time);
+	LiquidScreen* home_screen = new LiquidScreen(*home_line1, *home_line2, *home_line3, *home_line4);
 
 	LiquidMenu* menu = new LiquidMenu(*lcd);
 };

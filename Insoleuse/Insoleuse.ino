@@ -8,10 +8,14 @@
 #include "Menu.h"
 #include <Wire.h>
 #include "Config.h"
+#include <Timer.h>
 
-Keyboard* keyboard = new Keyboard();
 ApplicationMenu* menu = new ApplicationMenu();
 GPIO* gpio = new GPIO();
+Timer t;
+
+int currentTime = 0;
+char timeString[16];
 
 void initializeGPIO() {
 	pinMode(gpio->Relay, OUTPUT);
@@ -29,8 +33,6 @@ void setup()
 
 	initializeGPIO();
 
-	keyboard->Init();
-
 	Serial.begin(9600);
 	Serial.println("LCD...");
 
@@ -41,35 +43,45 @@ void setup()
 	Wire.endTransmission();
 
 	delay(2000);
+	
+	t.every(250, UpdateScreen);
+	t.every(1000, UpdateTime);
+
+	menu->Navigate(HOME_SCREEN);
+}
+
+void UpdateTime() {
+	currentTime += 1;
+	itoa(currentTime, timeString, 10);
+	menu->UpdateTime(timeString);
+}
+
+void UpdateScreen() {
+	menu->Update();
 }
 
 void loop()
 {
-	menu->Navigate(HOME_SCREEN);
+	t.update();
 
-	int scanKeyboard = 1;
-	for (int i = 0; scanKeyboard == 1; i += 100) {
-		char key = keyboard->GetKey();
+	//int scanKeyboard = 1;
+	//for (int i = 0; scanKeyboard == 1; i += 100) {
 
-		if (key) {
-			Serial.println(key);
-			tone(gpio->Piezo, 440, 250);
-		}
 
-		if (digitalRead(gpio->ReedSwitch)) {
-			Serial.print("0");
-		}
-		else {
-			Serial.print("1");
-			tone(gpio->Piezo, 440, 250);
-		}
+	//	if (digitalRead(gpio->ReedSwitch)) {
+	//		Serial.print("0");
+	//	}
+	//	else {
+	//		Serial.print("1");
+	//		tone(gpio->Piezo, 440, 250);
+	//	}
 
-		delay(100);
+	//	delay(100);
 
-		if (i == 1000) {
-			scanKeyboard = 0;
-		}
-	}
+	//	if (i == 1000) {
+	//		scanKeyboard = 0;
+	//	}
+	//}
 
 	/*if (show % 2 == 0) { // Switch relay
 		digitalWrite(relayPin, LOW);
