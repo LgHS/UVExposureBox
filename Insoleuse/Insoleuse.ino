@@ -10,7 +10,6 @@
 #include "Config.h"
 #include <Timer.h>
 
-ApplicationMenu* menu = new ApplicationMenu();
 GPIO* gpio = new GPIO();
 Timer t;
 
@@ -28,8 +27,8 @@ void initializeGPIO() {
 
 void setup()
 {
-	menu->Init();
-	menu->Navigate(WELCOME_SCREEN);
+	ApplicationMenu::getInstance().Init();
+	ApplicationMenu::getInstance().Navigate(WELCOME_SCREEN);
 
 	initializeGPIO();
 
@@ -44,20 +43,20 @@ void setup()
 
 	delay(2000);
 	
-	t.every(250, UpdateScreen);
+	t.every(100, UpdateScreen);
 	t.every(1000, UpdateTime);
 
-	menu->Navigate(HOME_SCREEN);
+	ApplicationMenu::getInstance().Navigate(HOME_SCREEN);
 }
 
 void UpdateTime() {
 	currentTime += 1;
 	itoa(currentTime, timeString, 10);
-	menu->UpdateTime(timeString);
+	ApplicationMenu::getInstance().UpdateTime(timeString);
 }
 
 void UpdateScreen() {
-	menu->Update();
+	ApplicationMenu::getInstance().Update();
 }
 
 void loop()

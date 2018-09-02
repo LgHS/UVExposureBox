@@ -4,7 +4,7 @@
 
 #include "Menu.h"
 #include <LiquidCrystal_I2C.h>
-#include <LiquidMenu.h>
+#include "LiquidMenu/src/LiquidMenu.h"
 #include "Keyboard.h"
 #include <Keypad.h>
 #include <Keypad_MC17.h>
@@ -13,8 +13,13 @@ ApplicationMenu::ApplicationMenu() {
 
 }
 
+void ApplicationMenu::SwitchFocus(int count, bool direction) {
+	for(int i = 0; i < count; i++)
+		this->menu->switch_focus(direction);
+}
+
 void Do_A() {
-	Serial.println("A");
+	ApplicationMenu::getInstance().Navigate(START_SCREEN);
 }
 
 void Do_B() {
@@ -29,12 +34,13 @@ void ApplicationMenu::Init() {
 
 	this->menu->init();
 
-	this->home_line1->attach_function(A, Do_A);
-	this->home_line1->attach_function(B, Do_B);
-
+	//this->home_screen->attach_function(A, Do_A);
+	//this->home_screen->attach_function(B, Do_B);
+	
 	this->menu->add_screen(*this->welcome_screen);
 	this->menu->add_screen(*this->home_screen);
-
+	this->menu->add_screen(*this->start_screen);
+	
 	this->menu->update();
 }
 
@@ -45,10 +51,8 @@ void ApplicationMenu::Navigate(int screen) {
 }
 
 void ApplicationMenu::UpdateTime(char * newtime) {
-	//if (strcmp(this->time, newtime) == 0) return;
-
 	this->time = newtime;
-	this->menu->update();
+	this->menu->softUpdate();
 }
 
 void ApplicationMenu::Update() {
@@ -58,36 +62,17 @@ void ApplicationMenu::Update() {
 	if (key) {
 		tone(this->gpio->Piezo, 440, 250);
 
-
 		if (key == 'A') {
-			Serial.println(key);
 			this->menu->call_function(A);
 		}
 		if (key == 'B') {
-			Serial.println(key);
 			this->menu->call_function(B);
 		}
 		if (key == 'C') {
-			this->menu->call_function(C);
+			this->menu->switch_focus(true);
 		}
 		if (key == 'D') {
-			this->menu->call_function(D);
+			this->menu->switch_focus(false);
 		}
 	}
-
-	//if (left.check() == LOW) {
-	//	menu.previous_screen();
-	//}
-	//if (up.check() == LOW) {
-	//	// Calls the function identified with
-	//	// increase or 1 for the focused line.
-	//	menu.call_function(increase);
-	//}
-	//if (down.check() == LOW) {
-	//	menu.call_function(decrease);
-	//}
-	//if (enter.check() == LOW) {
-	//	// Switches focus to the next line.
-	//	menu.switch_focus();
-	//}
 }
