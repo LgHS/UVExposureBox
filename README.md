@@ -18,6 +18,7 @@ I use the following libraries for the code:
  - Keypad and Keypad MC17 (https://github.com/joeyoung/arduino_keypads/)
  - LiquidCrystal_I2C
  - LiquidMenu (https://github.com/VaSe7u/LiquidMenu, To use an I2C connection you need to define I2C as "true" in the "LiquidMenu_config.h" file)
+ - Timer Library for Arduino (https://github.com/JChristensen/Timer)
  
  I use the following library for Kicad:
   - Node MCU : https://github.com/MarginallyClever/kicad-ESP8266
