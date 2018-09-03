@@ -21,9 +21,12 @@ public:
 	void Update();
 	void Init();
 	bool LoadFromSpiffs(String path);
-	   
-	ESP8266WebServer* server = new ESP8266WebServer(WEBSERVER_PORT);
+
+	void DoHandleWebRequests();
+	void DoHandleRoot();
+
 private:
+	ESP8266WebServer* server = new ESP8266WebServer(WEBSERVER_PORT);
 	WebServer() { }
 };
 

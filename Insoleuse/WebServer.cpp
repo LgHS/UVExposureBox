@@ -50,25 +50,33 @@ bool WebServer::LoadFromSpiffs(String path) {
 	return true;
 }
 
-void HandleRoot() {
-	WebServer::getInstance().server->sendHeader("Location", "/index.html", true);
-	WebServer::getInstance().server->send(302, "text/plane", "");
+void WebServer::DoHandleRoot() {
+	this->server->sendHeader("Location", "/index.html", true);
+	this->server->send(302, "text/plane", "");
+}
+
+void WebServer::DoHandleWebRequests() {
+	if (LoadFromSpiffs(this->server->uri())) return;
+	String message = "File Not Detected\n\n";
+	message += "URI: ";
+	message += this->server->uri();
+	message += "\nMethod: ";
+	message += (this->server->method() == HTTP_GET) ? "GET" : "POST";
+	message += "\nArguments: ";
+	message += this->server->args();
+	message += "\n";
+	for (uint8_t i = 0; i < this->server->args(); i++) {
+		message += " NAME:" + this->server->argName(i) + "\n VALUE:" + this->server->arg(i) + "\n";
+	}
+	this->server->send(404, "text/plain", message);
+	if (DEBUG)
+		Serial.println(message);
 }
 
 void HandleWebRequests() {
-	if (WebServer::getInstance().LoadFromSpiffs(WebServer::getInstance().server->uri())) return;
-	String message = "File Not Detected\n\n";
-	message += "URI: ";
-	message += WebServer::getInstance().server->uri();
-	message += "\nMethod: ";
-	message += (WebServer::getInstance().server->method() == HTTP_GET) ? "GET" : "POST";
-	message += "\nArguments: ";
-	message += WebServer::getInstance().server->args();
-	message += "\n";
-	for (uint8_t i = 0; i < WebServer::getInstance().server->args(); i++) {
-		message += " NAME:" + WebServer::getInstance().server->argName(i) + "\n VALUE:" + WebServer::getInstance().server->arg(i) + "\n";
-	}
-	WebServer::getInstance().server->send(404, "text/plain", message);
-	if(DEBUG)
-		Serial.println(message);
+	WebServer::getInstance().DoHandleWebRequests();
+}
+
+void HandleRoot() {
+	WebServer::getInstance().DoHandleRoot();
 }
