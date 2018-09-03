@@ -3,24 +3,21 @@
  Created:	9/1/2018 5:21:38 PM
  Author:	istac
 */
+
 #include "GPIO.h"
 #include "WebServer.h"
 #include "ReedSwitchSecurity.h"
-#include "Piezo.h"
-#include "UVStrip.h"
 #include "Job.h"
 #include "Menu.h"
 #include <Wire.h>
 #include "Config.h"
-#include <Timer.h>
-#include "ReedSwitchSecurity.h"
 
 void setup()
 {
 	ApplicationMenu::getInstance().Init();
 	ApplicationMenu::getInstance().Navigate(WELCOME_SCREEN);
 
-	GPIO::getInstance().InitializeGPIO();
+	GPIO::getInstance().Init();
 
 	Serial.begin(9600);
 

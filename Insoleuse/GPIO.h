@@ -16,7 +16,7 @@ public:
 	uint8_t PiezoPin = D7;
 	uint8_t ReedSwitchPin = D6;
 	
-	void InitializeGPIO() {
+	void Init() {
 		pinMode(RelayPin, OUTPUT);
 		pinMode(PiezoPin, OUTPUT);
 		pinMode(ReedSwitchPin, INPUT);
