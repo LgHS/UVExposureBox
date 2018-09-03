@@ -79,7 +79,6 @@ void ApplicationMenu::CleanLCDVariable() {
 }
 
 void ApplicationMenu::Update() {
-	
 	char key = this->keyboard->GetKey();
 
 	if (key) {

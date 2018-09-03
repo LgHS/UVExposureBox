@@ -9,6 +9,7 @@
 #include "Job.h"
 #include "Menu.h"
 #include "Piezo.h"
+#include "GPIO.h"
 
 void OnReedSwitchTick();
 
@@ -26,32 +27,34 @@ public:
 	void Update() {
 		t.update();
 	}
-	bool IsPaused = false;
+	void OnTick() {
 
+		if (!digitalRead(GPIO::getInstance().ReedSwitchPin) && !IsPaused) {
+			if (Job::getInstance().IsRunning && ApplicationMenu::getInstance().CurrentScreen == COUNTDOWN_SCREEN) {
+				Job::getInstance().Stop();
+				IsPaused = true;
+				Piezo::getInstance().Tone(C5, 250);
+			}
+		}
+		else if (digitalRead(GPIO::getInstance().ReedSwitchPin) && IsPaused) {
+			if (!Job::getInstance().IsRunning && ApplicationMenu::getInstance().CurrentScreen == COUNTDOWN_SCREEN) {
+				Job::getInstance().Start();
+				IsPaused = false;
+				Piezo::getInstance().Tone(C6, 250);
+			}
+		}
+		else if (ApplicationMenu::getInstance().CurrentScreen != COUNTDOWN_SCREEN && IsPaused == true) {
+			IsPaused = false;
+		}
+	}
 private:
+	bool IsPaused = false;
 	Timer t;
 	ReedSwitchSecurity() { }
 };
 
 void OnReedSwitchTick() {
-
-	if (!digitalRead(ReedSwitchPin) && !ReedSwitchSecurity::getInstance().IsPaused) {
-		if (Job::getInstance().IsRunning && ApplicationMenu::getInstance().CurrentScreen == COUNTDOWN_SCREEN) {
-			Job::getInstance().Stop();
-			ReedSwitchSecurity::getInstance().IsPaused = true;
-			Piezo::getInstance().Tone(C5, 250);
-		}
-	}
-	else if (digitalRead(ReedSwitchPin) && ReedSwitchSecurity::getInstance().IsPaused) {
-		if (!Job::getInstance().IsRunning && ApplicationMenu::getInstance().CurrentScreen == COUNTDOWN_SCREEN) {
-			Job::getInstance().Start();
-			ReedSwitchSecurity::getInstance().IsPaused = false;
-			Piezo::getInstance().Tone(C6, 250);
-		}
-	}
-	else if (ApplicationMenu::getInstance().CurrentScreen != COUNTDOWN_SCREEN && ReedSwitchSecurity::getInstance().IsPaused == true) {
-		ReedSwitchSecurity::getInstance().IsPaused = false;
-	}
+	ReedSwitchSecurity::getInstance().OnTick();
 }
 
 #endif

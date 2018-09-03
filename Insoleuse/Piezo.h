@@ -4,6 +4,7 @@
 #define _PIEZO_h
 
 #include "Config.h"
+#include "GPIO.h"
 
 enum Note {
 	F4 = 349,
@@ -31,7 +32,7 @@ public:
 		return instance;
 	}
 	void Tone(int frequency, int duration) {
-		tone(PiezoPin, frequency, duration);
+		tone(GPIO::getInstance().PiezoPin, frequency, duration);
 	}
 
 	void PlayEndJobTune() {

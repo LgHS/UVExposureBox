@@ -4,7 +4,8 @@
 #define _UVSTRIP_h
 
 #include "Config.h"
-#include "Arduino.h"
+#include "Arduino.h""
+#include "GPIO.h"
 
 class UVStrip {
 public:
@@ -13,10 +14,10 @@ public:
 		return instance;
 	}
 	void Start() {
-		digitalWrite(RelayPin, HIGH);
+		digitalWrite(GPIO::getInstance().RelayPin, HIGH);
 	}
 	void Stop() {
-		digitalWrite(RelayPin, LOW);
+		digitalWrite(GPIO::getInstance().RelayPin, LOW);
 	}
 private:
 	UVStrip() { };

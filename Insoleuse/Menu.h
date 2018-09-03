@@ -9,6 +9,7 @@
 #include "Keyboard.h"
 #include <Keypad.h>
 #include <Keypad_MC17.h>
+#include "Timer.h"
 
 enum MenuFuction {
 	KPA = 1,
@@ -146,6 +147,8 @@ public:
 	int CurrentScreen = -1;
 private:
 	ApplicationMenu();
+
+	Timer* t = new Timer();
 	
 	Keyboard* keyboard = new Keyboard();
 
