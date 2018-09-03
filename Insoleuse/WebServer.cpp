@@ -35,7 +35,7 @@ bool WebServer::LoadFromSpiffs(String path) {
 	else if (path.endsWith(".css")) dataType = "text/css";
 	else if (path.endsWith(".js")) dataType = "application/javascript";
 	else if (path.endsWith(".png")) dataType = "image/png";
-	else if (path.endsWith(".svg")) dataType = "image/svg";
+	else if (path.endsWith(".svg")) dataType = "image/svg+xml";
 	else if (path.endsWith(".gif")) dataType = "image/gif";
 	else if (path.endsWith(".jpg")) dataType = "image/jpeg";
 	else if (path.endsWith(".ico")) dataType = "image/x-icon";
