@@ -22,6 +22,30 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Insoleuse.ino" />
+    <None Include="data\index.html">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\bootstrap.min.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\bootstrap.min.js">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\popper.min.js">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="custom.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\jquery.min.js">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\bootstrap.bundle.min.js">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\logo.svg">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.Insoleuse.vsarduino.h">
@@ -60,6 +84,12 @@
     <ClInclude Include="ReedSwitchSecurity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="WebServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GPIO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Menu.cpp">
@@ -84,6 +114,9 @@
       <Filter>Source Files\LiquidMenu</Filter>
     </ClCompile>
     <ClCompile Include="Job.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WebServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

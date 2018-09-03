@@ -10,8 +10,10 @@
 void WebServer::Init() {
 	SPIFFS.begin();
 
-	WiFi.mode(WIFI_STA);
-	WiFi.softAP(WEBSERVER_SSID);
+	WiFi.mode(WIFI_AP);
+	uint8_t mac[WL_MAC_ADDR_LENGTH];
+	WiFi.softAPmacAddress(mac);
+	WiFi.softAP(WEBSERVER_SSID, WEBSERVER_PWD);
 	this->MyIP = WiFi.softAPIP();
 
 	this->server->on("/", HandleRoot);
