@@ -17,7 +17,7 @@ void WebServer::Init() {
 	this->MyIP = WiFi.softAPIP();
 
 	this->server->on("/", HandleRoot);
-	this->server->onNotFound(HandleWebRequests); //Set setver all paths are not found so we can handle as per URI
+	this->server->onNotFound(HandleWebRequests);
 	this->server->begin();
 }
 
