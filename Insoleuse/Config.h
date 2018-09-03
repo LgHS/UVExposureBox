@@ -22,5 +22,11 @@
 
 #define JOB_REFRESH_RATE 10
 
+#define DEBUG true
+
+#define WEBSERVER_PORT 80
+#define WEBSERVER_SSID "InsoleuseV2"
+#define WEBSERVER_PWD "lghs42!"
+
 #endif
 

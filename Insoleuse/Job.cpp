@@ -11,7 +11,6 @@
 
 void Job::SetDuration(int time) {
 	this->RemainingTime = time * JOB_REFRESH_RATE;
-	Serial.println(this->RemainingTime);
 }
 
 void DecreaseRemainingTime() {

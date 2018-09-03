@@ -23,7 +23,6 @@ void setup()
 	GPIO::getInstance().InitializeGPIO();
 
 	Serial.begin(9600);
-	Serial.println("LCD...");
 
 	while (!Serial);
 

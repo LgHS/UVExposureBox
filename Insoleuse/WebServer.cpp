@@ -4,14 +4,13 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <FS.h>
-
+#include "Config.h"
 #include "WebServer.h"
 
 void WebServer::Init() {
 	SPIFFS.begin();
-	Serial.println("File System Initialized");
 
-	WiFi.softAP(ssid);
+	WiFi.softAP(WEBSERVER_SSID, WEBSERVER_PWD);
 	this->MyIP = WiFi.softAPIP();
 
 	this->server->on("/", HandleRoot);
@@ -66,5 +65,6 @@ void HandleWebRequests() {
 		message += " NAME:" + WebServer::getInstance().server->argName(i) + "\n VALUE:" + WebServer::getInstance().server->arg(i) + "\n";
 	}
 	WebServer::getInstance().server->send(404, "text/plain", message);
-	Serial.println(message);
+	if(DEBUG)
+		Serial.println(message);
 }

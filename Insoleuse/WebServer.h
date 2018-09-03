@@ -6,6 +6,7 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <FS.h>
+#include "Config.h"
 
 void HandleWebRequests();
 void HandleRoot();
@@ -21,15 +22,8 @@ public:
 	void Init();
 	bool LoadFromSpiffs(String path);
 	   
-	ESP8266WebServer* server = new ESP8266WebServer(80);
+	ESP8266WebServer* server = new ESP8266WebServer(WEBSERVER_PORT);
 private:
-
-	const char* imagefile = "/image.png";
-	const char* htmlfile = "/index.html";
-
-	const char *ssid = "image-demo-circuits4you.com";
-	const char *password = "password";
-
 	WebServer() { }
 };
 
