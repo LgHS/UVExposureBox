@@ -11,19 +11,28 @@
 </head>
 <body>
     <div class="container">
-        <div class="row">
-            <div class="col-12">
+        <div class="row" style="margin-top: 20px">
+            <div class="col-xs-8">
                 <h1>Insoleuse V2.0.1</h1>
             </div>
+            <div class="col-xs-4">
+                <img src="logo.svg"
+                     alt="Logo LGHS"
+                     height="100px" />
+            </div>
         </div>
-        <div class="panel-group">
+        <div class="panel-group" style="margin-top: 20px">
             <div class="panel panel-default">
                 <div class="panel-heading">Status</div>
-                <div class="panel-body">Running / Paused</div>
+                <div class="panel-body"><span class="badge badge-success">Running</span> / <span class="badge badge-warning">Waiting</span></div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading">Panel Header</div>
-                <div class="panel-body">Panel Content</div>
+                <div class="panel-heading">Current Job</div>
+                <div class="panel-body">
+                    <p>Remaining time: 00:00:00</p>
+                    <button type="button" class="btn btn-danger">Cancel</button>
+                    <button type="button" class="btn btn-warning">Pause/Continue</button>
+                </div>
             </div>
         </div>
     </div>
