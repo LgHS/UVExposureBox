@@ -6,7 +6,7 @@
 #define I2CADDR_MCP23017 0x20
 #define I2CADDR_LCD 0x3F
 
-#define VERSION "2.0.1"
+#define VERSION "2.0.2"
 
 #define KEYPAD_ROW 4
 #define KEYPAD_COL 4

@@ -27,7 +27,7 @@ void ApplicationMenu::Init() {
 	this->menu->add_screen(*this->homeScreen->Screen);
 	this->menu->add_screen(*this->startScreen->Screen);
 	this->menu->add_screen(*this->settingScreen->Screen);
-	this->menu->add_screen(*this->countdownScreen->Screen);
+	this->menu->add_screen(*this->jobScreen->Screen);
 	
 	this->menu->update();
 }
@@ -38,43 +38,43 @@ void ApplicationMenu::Navigate(int screen) {
 	this->CurrentScreen = screen;
 }
 
-void ApplicationMenu::UpdateTime(char * newtime) {
+void ApplicationMenu::UpdateStartDisplayedTime(char * newtime) {
 	this->startScreen->StartScreenTime = newtime;
 	this->menu->update();
 }
 
-void ApplicationMenu::SetCountdown(int countdown) {
+void ApplicationMenu::SetJobRemainingTime(int countdown) {
 	int hour = countdown / 3600;
 	countdown = countdown % 3600;
 	int min = countdown / 60;
 	countdown = countdown % 60;
 	int sec = countdown;
 	   
-	memcpy(this->remainingCountdownTime, ApplicationMenu::getInstance().timeTemplate, sizeof(ApplicationMenu::getInstance().timeTemplate));
+	memcpy(this->remaningJobTime, this->timeTemplate, sizeof(this->timeTemplate));
 
 	for (int i = 0; i < 8; i++) {
 		if (i == 2 || i == 5) continue;
 
-		if (i == 0 && hour != 0) this->remainingCountdownTime[i] = (char)((hour / 10) + 48);
-		else if (i == 1 && hour != 0) this->remainingCountdownTime[i] = (char)((hour % 10) + 48);
-		else if (i == 3 && min != 0) this->remainingCountdownTime[i] = (char)((min / 10) + 48);
-		else if (i == 4 && min != 0) this->remainingCountdownTime[i] = (char)((min % 10) + 48);
-		else if (i == 6 && sec != 0) this->remainingCountdownTime[i] = (char)((sec / 10) + 48);
-		else if (i == 7 && sec != 0) this->remainingCountdownTime[i] = (char)((sec % 10) + 48);
+		if (i == 0 && hour != 0) this->remaningJobTime[i] = (char)((hour / 10) + 48);
+		else if (i == 1 && hour != 0) this->remaningJobTime[i] = (char)((hour % 10) + 48);
+		else if (i == 3 && min != 0) this->remaningJobTime[i] = (char)((min / 10) + 48);
+		else if (i == 4 && min != 0) this->remaningJobTime[i] = (char)((min % 10) + 48);
+		else if (i == 6 && sec != 0) this->remaningJobTime[i] = (char)((sec / 10) + 48);
+		else if (i == 7 && sec != 0) this->remaningJobTime[i] = (char)((sec % 10) + 48);
 	}
 
-	if (hour == 0) { this->remainingCountdownTime[0] = '0'; this->remainingCountdownTime[1] = '0'; }
-	if (min == 0)  { this->remainingCountdownTime[3] = '0'; this->remainingCountdownTime[4] = '0'; }
-	if (sec == 0)  { this->remainingCountdownTime[6] = '0'; this->remainingCountdownTime[7] = '0'; }
+	if (hour == 0) { this->remaningJobTime[0] = '0'; this->remaningJobTime[1] = '0'; }
+	if (min == 0)  { this->remaningJobTime[3] = '0'; this->remaningJobTime[4] = '0'; }
+	if (sec == 0)  { this->remaningJobTime[6] = '0'; this->remaningJobTime[7] = '0'; }
 
-	this->countdownScreen->CountdownTime = this->remainingCountdownTime;
+	this->jobScreen->CountdownTime = this->remaningJobTime;
 	this->menu->update();
 }
 
 void ApplicationMenu::CleanLCDVariable() {
-	memset(this->countdownScreen->CountdownTime, 0, sizeof(this->countdownScreen->CountdownTime));
+	memset(this->jobScreen->CountdownTime, 0, sizeof(this->jobScreen->CountdownTime));
 	memset(this->remainingTime, 0, sizeof(this->remainingTime));
-	memset(this->remainingCountdownTime, 0, sizeof(this->remainingCountdownTime));
+	memset(this->remaningJobTime, 0, sizeof(this->remaningJobTime));
 	memset(this->startScreen->StartScreenTime, 0, sizeof(this->startScreen->StartScreenTime));
 }
 
@@ -167,19 +167,33 @@ int ApplicationMenu::GetSeconds() {
 	return seconds;
 }
 
-int currentPosition = 0;
+void ApplicationMenu::SetSettingsIp(char * ip) {
+	this->settingScreen->Ip = ip;
+}
+
+void ApplicationMenu::ResetTime() {
+	memcpy(remainingTime, timeTemplate, sizeof(timeTemplate));
+	UpdateStartDisplayedTime(remainingTime);
+	currentCaretPosition = 0;
+}
+
+void ApplicationMenu::PushNumber(char newNumber) {
+	if (remainingTime[currentCaretPosition] == ':') currentCaretPosition += 1;
+	if (!IsValidDigitalInput(newNumber, currentCaretPosition)) return;
+	remainingTime[currentCaretPosition] = newNumber;
+	currentCaretPosition += 1;
+	if (currentCaretPosition >= 8) currentCaretPosition = 0;
+}
 
 void Home_Do_A() {
 	ApplicationMenu::getInstance().Navigate(START_SCREEN);
-	memcpy(ApplicationMenu::getInstance().remainingTime, ApplicationMenu::getInstance().timeTemplate, sizeof(ApplicationMenu::getInstance().timeTemplate));
-	ApplicationMenu::getInstance().UpdateTime(ApplicationMenu::getInstance().remainingTime);
-	currentPosition = 0;
+	ApplicationMenu::getInstance().ResetTime();
 }
 
 void Home_Do_B() {
+	ApplicationMenu::getInstance().SetSettingsIp(WebServer::getInstance().GetIp());
 	ApplicationMenu::getInstance().Navigate(SETTING_SCREEN);
 }
-
 
 void Start_Do_A() {
 	ApplicationMenu::getInstance().Navigate(COUNTDOWN_SCREEN);
@@ -192,42 +206,34 @@ void Start_Do_D() {
 }
 
 void Start_Do_D0() {
-	PushNumber('0');
+	ApplicationMenu::getInstance().PushNumber('0');
 }
 void Start_Do_D1() {
-	PushNumber('1');
+	ApplicationMenu::getInstance().PushNumber('1');
 }
 void Start_Do_D2() {
-	PushNumber('2');
+	ApplicationMenu::getInstance().PushNumber('2');
 }
 void Start_Do_D3() {
-	PushNumber('3');
+	ApplicationMenu::getInstance().PushNumber('3');
 }
 void Start_Do_D4() {
-	PushNumber('4');
+	ApplicationMenu::getInstance().PushNumber('4');
 }
 void Start_Do_D5() {
-	PushNumber('5');
+	ApplicationMenu::getInstance().PushNumber('5');
 }
 void Start_Do_D6() {
-	PushNumber('6');
+	ApplicationMenu::getInstance().PushNumber('6');
 }
 void Start_Do_D7() {
-	PushNumber('7');
+	ApplicationMenu::getInstance().PushNumber('7');
 }
 void Start_Do_D8() {
-	PushNumber('8');
+	ApplicationMenu::getInstance().PushNumber('8');
 }
 void Start_Do_D9() {
-	PushNumber('9');
-}
-
-void PushNumber(char newNumber) {
-	if (ApplicationMenu::getInstance().remainingTime[currentPosition] == ':') currentPosition += 1;
-	if (!IsValidDigitalInput(newNumber, currentPosition)) return;
-	ApplicationMenu::getInstance().remainingTime[currentPosition] = newNumber;
-	currentPosition += 1;
-	if (currentPosition >= 8) currentPosition = 0;
+	ApplicationMenu::getInstance().PushNumber('9');
 }
 
 bool IsValidDigitalInput(char c, int position) {
@@ -254,4 +260,8 @@ void Countdown_Do_D() {
 		Job::getInstance().Stop();
 	else
 		Job::getInstance().Start();
+}
+
+void Settings_Do_D() {
+	ApplicationMenu::getInstance().Navigate(HOME_SCREEN);
 }

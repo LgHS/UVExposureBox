@@ -34,9 +34,6 @@
     <None Include="data\popper.min.js">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="custom.css">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="data\jquery.min.js">
       <Filter>Resource Files</Filter>
     </None>
@@ -44,6 +41,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="data\logo.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\custom.css">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

@@ -17,17 +17,23 @@ public:
 		static WebServer instance;
 		return instance;
 	}
-	IPAddress MyIP;
 	void Update();
 	void Init();
-	bool LoadFromSpiffs(String path);
 
 	void DoHandleWebRequests();
 	void DoHandleRoot();
 
+	char* GetIp() {
+		myIP.toString().toCharArray(ipChar, 16);
+		return ipChar;
+	}
+
 private:
+	char* ipChar = "xxx.xxx.xxx.xxx";
+	IPAddress myIP;
 	ESP8266WebServer* server = new ESP8266WebServer(WEBSERVER_PORT);
 	WebServer() { }
+	bool LoadFromSpiffs(String path);
 };
 
 #endif

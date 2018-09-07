@@ -14,7 +14,7 @@ void WebServer::Init() {
 	uint8_t mac[WL_MAC_ADDR_LENGTH];
 	WiFi.softAPmacAddress(mac);
 	WiFi.softAP(WEBSERVER_SSID, WEBSERVER_PWD);
-	this->MyIP = WiFi.softAPIP();
+	this->myIP = WiFi.softAPIP();
 
 	this->server->on("/", HandleRoot);
 	this->server->onNotFound(HandleWebRequests);

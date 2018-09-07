@@ -6,10 +6,11 @@
 #include "Config.h"
 #include <LiquidCrystal_I2C.h>
 #include "LiquidMenu/src/LiquidMenu.h"
+#include "Timer.h"
+#include "WebServer.h"
 #include "Keyboard.h"
 #include <Keypad.h>
 #include <Keypad_MC17.h>
-#include "Timer.h"
 
 enum MenuFuction {
 	KPA = 1,
@@ -46,8 +47,9 @@ void Start_Do_D8();
 void Start_Do_D9();
 void PushNumber(char newNumber);
 bool IsValidDigitalInput(char c, int position);
-void Countdown_Do_D();
-void Countdown_Do_C();
+void Job_Do_D();
+void Job_Do_C();
+void Settings_Do_D();
 
 class WelcomeScreen {
 private:
@@ -100,7 +102,7 @@ public:
 	}
 };
 
-class CountdownScreen {
+class JobScreen {
 private:
 	LiquidLine* line1 = new LiquidLine(0, 0, "UV running");
 	LiquidLine* line2 = new LiquidLine(0, 1, "Do not open");
@@ -108,21 +110,26 @@ private:
 	LiquidLine* line4 = new LiquidLine(0, 3, "C:Cancel D:Pause");
 public:
 	char* CountdownTime;
-	CountdownScreen() {
-		this->Screen->attach_function(KPC, Countdown_Do_C);
-		this->Screen->attach_function(KPD, Countdown_Do_D);
+	JobScreen() {
+		this->Screen->attach_function(KPC, Job_Do_C);
+		this->Screen->attach_function(KPD, Job_Do_D);
 	}
 	LiquidScreen* Screen = new LiquidScreen(*line1, *line2, *line3, *line4);
 };
 
 class SettingScreen {
 private:
-	LiquidLine* setting_line1 = new LiquidLine(0, 0, "Select your time");
-	LiquidLine* setting_line2 = new LiquidLine(0, 1, "");
-	LiquidLine* setting_line3 = new LiquidLine(0, 2, "");
-	LiquidLine* setting_line4 = new LiquidLine(0, 3, "");
+	LiquidLine* setting_line1 = new LiquidLine(0, 0, "IP   :", Ip);
+	LiquidLine* setting_line3 = new LiquidLine(0, 1, "SSID :", WEBSERVER_SSID);
+	LiquidLine* setting_line2 = new LiquidLine(0, 2, "Pwd  :", WEBSERVER_PWD);
+	LiquidLine* setting_line4 = new LiquidLine(0, 3, "D:Return");
 public:
+	char* Ip;
 	LiquidScreen* Screen = new LiquidScreen(*setting_line1, *setting_line2, *setting_line3, *setting_line4);
+	SettingScreen() {
+		this->Screen->attach_function(KPD, Settings_Do_D);
+		Ip = WebServer::getInstance().GetIp();
+	}
 };
 
 class ApplicationMenu {
@@ -134,18 +141,22 @@ public:
 
 	void Init();
 	void Navigate(int screen);
-	void UpdateTime(char* time);
+	void UpdateStartDisplayedTime(char* time);
 	void Update();
 	int GetSeconds();
-	void SetCountdown(int countdown);
+	void SetJobRemainingTime(int countdown);
+	void SetSettingsIp(char* ip);
 	void CleanLCDVariable();
-
-	const char timeTemplate[8] = {'h','h',':','m','m',':','s','s'};
-	char remainingTime[8];
-	char remainingCountdownTime[8];
-
+	void ApplicationMenu::PushNumber(char newNumber);
+	void ResetTime();
+	   
 	int CurrentScreen = -1;
 private:
+	int currentCaretPosition = 0;
+	const char timeTemplate[8] = { 'h','h',':','m','m',':','s','s' };
+	char remainingTime[8];
+	char remaningJobTime[8];
+
 	ApplicationMenu();
 
 	Timer* t = new Timer();
@@ -158,7 +169,7 @@ private:
 	WelcomeScreen* welcomeScreen = new WelcomeScreen();
 	StartScreen* startScreen = new StartScreen();
 	SettingScreen* settingScreen = new SettingScreen();
-	CountdownScreen* countdownScreen = new CountdownScreen();
+	JobScreen* jobScreen = new JobScreen();
 
 	LiquidMenu* menu = new LiquidMenu(*lcd);
 };
