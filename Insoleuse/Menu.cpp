@@ -248,14 +248,14 @@ bool IsValidDigitalInput(char c, int position) {
 	else if (position == 7) return true;
 }
 
-void Countdown_Do_C() {
+void Job_Do_C() {
 	Job::getInstance().Stop();
 	Job::getInstance().Reset();
 	ApplicationMenu::getInstance().CleanLCDVariable();
 	ApplicationMenu::getInstance().Navigate(HOME_SCREEN);
 }
 
-void Countdown_Do_D() {
+void Job_Do_D() {
 	if (Job::getInstance().IsRunning)
 		Job::getInstance().Stop();
 	else

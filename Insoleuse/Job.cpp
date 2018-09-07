@@ -22,7 +22,7 @@ void DecreaseRemainingTime() {
 		return;
 	}
 	if (Job::getInstance().RemainingTime % JOB_REFRESH_RATE == 0) {
-		ApplicationMenu::getInstance().SetCountdown(Job::getInstance().RemainingTime / JOB_REFRESH_RATE);
+		ApplicationMenu::getInstance().SetJobRemainingTime(Job::getInstance().RemainingTime / JOB_REFRESH_RATE);
 	}
 }
 
@@ -30,7 +30,7 @@ void Job::Start() {
 	t.stop(0);
 	t.every(1000 / JOB_REFRESH_RATE, DecreaseRemainingTime, this->RemainingTime);
 	UVStrip::getInstance().Start();
-	ApplicationMenu::getInstance().SetCountdown(Job::getInstance().RemainingTime / JOB_REFRESH_RATE);
+	ApplicationMenu::getInstance().SetJobRemainingTime(Job::getInstance().RemainingTime / JOB_REFRESH_RATE);
 	this->IsRunning = true;
 }
 
