@@ -10,6 +10,9 @@
 
 #define KEYPAD_ROW 4
 #define KEYPAD_COL 4
+#define KEYPAD_BEEP_DURATION 250
+
+#define END_TUNE_DURATION 500
 
 #define LCD_ROW 4
 #define LCD_COL 20

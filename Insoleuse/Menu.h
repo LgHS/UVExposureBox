@@ -45,8 +45,6 @@ void Start_Do_D6();
 void Start_Do_D7();
 void Start_Do_D8();
 void Start_Do_D9();
-void PushNumber(char newNumber);
-bool IsValidDigitalInput(char c, int position);
 void Job_Do_D();
 void Job_Do_C();
 void Settings_Do_D();
@@ -128,7 +126,6 @@ public:
 	LiquidScreen* Screen = new LiquidScreen(*setting_line1, *setting_line2, *setting_line3, *setting_line4);
 	SettingScreen() {
 		this->Screen->attach_function(KPD, Settings_Do_D);
-		Ip = WebServer::getInstance().GetIp();
 	}
 };
 
@@ -141,13 +138,12 @@ public:
 
 	void Init();
 	void Navigate(int screen);
-	void UpdateStartDisplayedTime(char* time);
 	void Update();
 	int GetSeconds();
 	void SetJobRemainingTime(int countdown);
 	void SetSettingsIp(char* ip);
 	void CleanLCDVariable();
-	void ApplicationMenu::PushNumber(char newNumber);
+	void PushNumber(char newNumber);
 	void ResetTime();
 	   
 	int CurrentScreen = -1;
@@ -156,9 +152,7 @@ private:
 	const char timeTemplate[8] = { 'h','h',':','m','m',':','s','s' };
 	char remainingTime[8];
 	char remaningJobTime[8];
-
-	ApplicationMenu();
-
+	
 	Timer* t = new Timer();
 	
 	Keyboard* keyboard = new Keyboard();
@@ -172,6 +166,11 @@ private:
 	JobScreen* jobScreen = new JobScreen();
 
 	LiquidMenu* menu = new LiquidMenu(*lcd);
+
+	ApplicationMenu();
+
+	bool IsValidDigitalInput(char c, int position);
+	void UpdateStartDisplayedTime(char* time);
 };
 
 #endif

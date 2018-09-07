@@ -84,67 +84,67 @@ void ApplicationMenu::Update() {
 	if (key) {
 
 		if (key == 'A') {
-			Piezo::getInstance().Tone(F4, 250);
+			Piezo::getInstance().Tone(F4, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPA);
 		}
 		if (key == 'B') {
-			Piezo::getInstance().Tone(G4, 250);
+			Piezo::getInstance().Tone(G4, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPB);
 		}
 		if (key == 'C') {
-			Piezo::getInstance().Tone(A4, 250);
+			Piezo::getInstance().Tone(A4, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPC);
 		}
 		if (key == 'D') {
-			Piezo::getInstance().Tone(B4, 250);
+			Piezo::getInstance().Tone(B4, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPD);
 		}
 		if (key == '0') {
-			Piezo::getInstance().Tone(C5, 250);
+			Piezo::getInstance().Tone(C5, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPD0);
 		}
 		if (key == '1') {
-			Piezo::getInstance().Tone(DD5, 250);
+			Piezo::getInstance().Tone(D_5, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPD1);
 		}
 		if (key == '2') {
-			Piezo::getInstance().Tone(E5, 250);
+			Piezo::getInstance().Tone(E5, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPD2);
 		}
 		if (key == '3') {
-			Piezo::getInstance().Tone(F5, 250);
+			Piezo::getInstance().Tone(F5, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPD3);
 		}
 		if (key == '4') {
-			Piezo::getInstance().Tone(G5, 250);
+			Piezo::getInstance().Tone(G5, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPD4);
 		}
 		if (key == '5') {
-			Piezo::getInstance().Tone(A5, 250);
+			Piezo::getInstance().Tone(A5, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPD5);
 		}
 		if (key == '6') {
-			Piezo::getInstance().Tone(B5, 250);
+			Piezo::getInstance().Tone(B5, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPD6);
 		}
 		if (key == '7') {
-			Piezo::getInstance().Tone(C6, 250);
+			Piezo::getInstance().Tone(C6, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPD7);
 		}
 		if (key == '8') {
-			Piezo::getInstance().Tone(DD6, 250);
+			Piezo::getInstance().Tone(D_6, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPD8);
 		}
 		if (key == '9') {
-			Piezo::getInstance().Tone(E6, 250);
+			Piezo::getInstance().Tone(E6, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPD9);
 		}
 		if (key == '*') {
-			Piezo::getInstance().Tone(F5, 250);
+			Piezo::getInstance().Tone(F5, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPDStar);
 		}
 		if (key == '#') {
-			Piezo::getInstance().Tone(G5, 250);
+			Piezo::getInstance().Tone(G5, KEYPAD_BEEP_DURATION);
 			this->menu->call_function(KPDSharp);
 		}
 	}
@@ -183,6 +183,18 @@ void ApplicationMenu::PushNumber(char newNumber) {
 	remainingTime[currentCaretPosition] = newNumber;
 	currentCaretPosition += 1;
 	if (currentCaretPosition >= 8) currentCaretPosition = 0;
+}
+
+bool ApplicationMenu::IsValidDigitalInput(char c, int position) {
+	int value = (int)c - 48;
+	if (position == 0) return true;
+	else if (position == 1) return true;
+	else if (position == 2) return false;
+	else if (position == 3) return value >= 0 && value <= 5;
+	else if (position == 4) return true;
+	else if (position == 5) return false;
+	else if (position == 6) return value >= 0 && value <= 5;
+	else if (position == 7) return true;
 }
 
 void Home_Do_A() {
@@ -236,17 +248,6 @@ void Start_Do_D9() {
 	ApplicationMenu::getInstance().PushNumber('9');
 }
 
-bool IsValidDigitalInput(char c, int position) {
-	int value = (int)c - 48;
-	if (position == 0) return true;
-	else if (position == 1) return true;
-	else if (position == 2) return false;
-	else if (position == 3) return value >= 0 && value <= 5;
-	else if (position == 4) return true;
-	else if (position == 5) return false;
-	else if (position == 6) return value >= 0 && value <= 5;
-	else if (position == 7) return true;
-}
 
 void Job_Do_C() {
 	Job::getInstance().Stop();
