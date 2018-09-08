@@ -6,6 +6,8 @@
 #include <FS.h>
 #include "Config.h"
 #include "WebServer.h"
+#include "Json/ArduinoJson.h"
+#include "Job.h"
 
 void WebServer::Init() {
 	SPIFFS.begin();
@@ -17,6 +19,8 @@ void WebServer::Init() {
 	this->myIP = WiFi.softAPIP();
 
 	this->server->on("/", HandleRoot);
+	this->server->on("/api/getRemainingTime", HandleGetRemainingTime);
+	this->server->on("/api/getState", HandleGetState);
 	this->server->onNotFound(HandleWebRequests);
 	this->server->begin();
 }
@@ -73,10 +77,48 @@ void WebServer::DoHandleWebRequests() {
 		Serial.println(message);
 }
 
+void WebServer::DoHandleGetState() {
+	StaticJsonBuffer<200> jsonBuffer;
+
+	JsonObject& root = jsonBuffer.createObject();
+	root["running"] = Job::getInstance().IsRunning ? "true" : "false";
+
+	String message;
+	root.printTo(message);
+
+	this->server->send(200, "text/json", message);
+}
+
+void WebServer::DoHandleGetRemainingTime() {
+	StaticJsonBuffer<200> jsonBuffer;
+
+	JsonObject& root = jsonBuffer.createObject();
+	root["sensor"] = "gps";
+	root["time"] = 1351824120;
+
+	JsonArray& data = root.createNestedArray("data");
+	data.add(48.756080);
+	data.add(2.302038);
+
+	String message;
+	root.printTo(message);
+
+	this->server->send(200, "text/json", message);
+}
+
 void HandleWebRequests() {
 	WebServer::getInstance().DoHandleWebRequests();
 }
 
 void HandleRoot() {
 	WebServer::getInstance().DoHandleRoot();
+}
+
+void HandleGetState() {
+	WebServer::getInstance().DoHandleGetState();
+}
+
+void HandleGetRemainingTime() {
+	WebServer::getInstance().DoHandleGetRemainingTime();
+
 }

@@ -19,6 +19,9 @@
     <Filter Include="Source Files\LiquidMenu">
       <UniqueIdentifier>{bd4617de-2a4c-4ab8-a407-e1385997f574}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Json">
+      <UniqueIdentifier>{63c79ceb-b9a4-462f-b751-8f37967def31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Insoleuse.ino" />
@@ -89,6 +92,9 @@
     </ClInclude>
     <ClInclude Include="GPIO.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\ArduinoJson.h">
+      <Filter>Header Files\Json</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

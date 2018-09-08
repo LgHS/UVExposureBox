@@ -12,7 +12,7 @@
 #include "Piezo.h"
 
 ApplicationMenu::ApplicationMenu() {
-
+	//this->CleanLCDVariable();
 }
 
 void ApplicationMenu::Init() {
@@ -30,6 +30,9 @@ void ApplicationMenu::Init() {
 	this->menu->add_screen(*this->jobScreen->Screen);
 	
 	this->menu->update();
+
+	memset(this->remainingTime, '\0', 8 * sizeof(char));
+	memset(this->remaningJobTime, '\0', 8 * sizeof(char));
 }
 
 void ApplicationMenu::Navigate(int screen) {
@@ -50,7 +53,7 @@ void ApplicationMenu::SetJobRemainingTime(int countdown) {
 	countdown = countdown % 60;
 	int sec = countdown;
 	   
-	memcpy(this->remaningJobTime, this->timeTemplate, sizeof(this->timeTemplate));
+	memcpy(this->remaningJobTime, this->timeTemplate, 8 * sizeof(char));
 
 	for (int i = 0; i < 8; i++) {
 		if (i == 2 || i == 5) continue;
@@ -67,15 +70,18 @@ void ApplicationMenu::SetJobRemainingTime(int countdown) {
 	if (min == 0)  { this->remaningJobTime[3] = '0'; this->remaningJobTime[4] = '0'; }
 	if (sec == 0)  { this->remaningJobTime[6] = '0'; this->remaningJobTime[7] = '0'; }
 
+	Serial.println(this->remaningJobTime);
+	Serial.println(sizeof(this->remaningJobTime));
+
 	this->jobScreen->CountdownTime = this->remaningJobTime;
 	this->menu->update();
 }
 
 void ApplicationMenu::CleanLCDVariable() {
-	memset(this->jobScreen->CountdownTime, 0, sizeof(this->jobScreen->CountdownTime));
-	memset(this->remainingTime, 0, sizeof(this->remainingTime));
-	memset(this->remaningJobTime, 0, sizeof(this->remaningJobTime));
-	memset(this->startScreen->StartScreenTime, 0, sizeof(this->startScreen->StartScreenTime));
+	memset(this->jobScreen->CountdownTime, '\0', 8 * sizeof(char));
+	memset(this->startScreen->StartScreenTime, '\0', 8 * sizeof(char));
+	memset(this->remainingTime, '\0', 8 * sizeof(char));
+	memset(this->remaningJobTime, '\0', 8 * sizeof(char));
 }
 
 void ApplicationMenu::Update() {

@@ -10,6 +10,8 @@
 
 void HandleWebRequests();
 void HandleRoot();
+void HandleGetState();
+void HandleGetRemainingTime();
 
 class WebServer {
 public:
@@ -22,6 +24,8 @@ public:
 
 	void DoHandleWebRequests();
 	void DoHandleRoot();
+	void DoHandleGetState();
+	void DoHandleGetRemainingTime();
 
 	char* GetIp() {
 		myIP.toString().toCharArray(ipChar, 16);

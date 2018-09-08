@@ -75,10 +75,10 @@ public:
 
 class StartScreen {
 private:
-	LiquidLine* start_line1 = new LiquidLine(0, 0, "Select your time");
+	LiquidLine* start_line1 = new LiquidLine(0, 0, "Select your time    ");
 	LiquidLine* start_line2 = new LiquidLine(0, 1, StartScreenTime);
-	LiquidLine* start_line3 = new LiquidLine(0, 2, "A:Start");
-	LiquidLine* start_line4 = new LiquidLine(0, 3, "C:Clear D:Return");
+	LiquidLine* start_line3 = new LiquidLine(0, 2, "A:Start             ");
+	LiquidLine* start_line4 = new LiquidLine(0, 3, "C:Clear D:Return    ");
 public:
 	char* StartScreenTime;
 	LiquidScreen* Screen = new LiquidScreen(*start_line1, *start_line2, *start_line3, *start_line4);
@@ -102,10 +102,10 @@ public:
 
 class JobScreen {
 private:
-	LiquidLine* line1 = new LiquidLine(0, 0, "UV running");
-	LiquidLine* line2 = new LiquidLine(0, 1, "Do not open");
-	LiquidLine* line3 = new LiquidLine(0, 2, "Time rem. ", CountdownTime);
-	LiquidLine* line4 = new LiquidLine(0, 3, "C:Cancel D:Pause");
+	LiquidLine* line1 = new LiquidLine(0, 0, "UV running          ");
+	LiquidLine* line3 = new LiquidLine(0, 1, "Time rem.  ", CountdownTime);
+	LiquidLine* line2 = new LiquidLine(0, 2, "");
+	LiquidLine* line4 = new LiquidLine(0, 3, "C:Cancel D:Pause    ");
 public:
 	char* CountdownTime;
 	JobScreen() {
@@ -150,8 +150,8 @@ public:
 private:
 	int currentCaretPosition = 0;
 	const char timeTemplate[8] = { 'h','h',':','m','m',':','s','s' };
-	char remainingTime[8];
-	char remaningJobTime[8];
+	char * remainingTime = "hh:mm:ss";
+	char * remaningJobTime = "hh:mm:ss";
 	
 	Timer* t = new Timer();
 	
