@@ -7,50 +7,167 @@
 
     <title>Insoleuse V2</title>
 
+    <link rel="stylesheet" href="bootstrap-reboot.css">
     <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap-grid.css">
+    <link rel="stylesheet" href="solid.min.css">
+    <link rel="stylesheet" href="fontawesome.min.css">
     <link rel="stylesheet" href="custom.css">
+    <link rel="stylesheet" href="tempusdominus-bootstrap-4.min.css">
 </head>
 <body>
-    <main class="container" role="main">
+    <main class="container" role="main" id="container">
         <div class="row" style="margin-top: 20px">
-            <div class="col-xs-8">
-                <h1>Insoleuse V2.0.1</h1>
+            <div class="col-sm-8 my-auto">
+                <h1>Insoleuse V2.0.2</h1>
             </div>
-            <div class="col-xs-4">
+            <div class="col-sm-4">
                 <img src="logo.svg"
-                     class="pull-right"
+                     class="float-right"
                      alt="Logo LGHS"
                      height="100px" />
             </div>
         </div>
-        <div class="panel-group" style="margin-top: 20px">
-            <div class="panel panel-default">
-                <div class="panel-heading">Status</div>
-                <div class="panel-body"><span class="badge badge-success">Running</span> / <span class="badge badge-warning">Waiting</span></div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">Status</div>
+                    <div class="card-body card-text">
+                        <h4>
+                            <span class="badge badge-success" id="running" style="display: none">Running</span><span class="badge badge-warning" id="idle" style="display: none">Idle</span>
+                        </h4>
+                    </div>
+                </div>
             </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">Current Job</div>
-                <div class="panel-body">
-                    <p>Remaining time: 00:00:00</p>
-                    <button type="button" class="btn btn-danger">Cancel</button>
-                    <button type="button" class="btn btn-warning">Pause/Continue</button>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-sm-12" id="job">
+                <div class="card">
+                    <div class="card-header">Current Job</div>
+                    <div class="card-body card-text">
+                        <p>Remaining time: <span id="remainingTime">00:00:00</span></p>
+                        <button type="button" class="btn btn-danger" id="cancel">Cancel</button>
+                        <button type="button" class="btn btn-warning" id="pause">Pause/Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-sm-12" id="startjob">
+                <div class="card">
+                    <div class="card-header">Create Job</div>
+                    <div class="card-body card-text">
+                        <div class="row">
+                            <div class="col-sm-11">
+                                <div class="form-group">
+                                    <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" />
+                                        <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fas fa-calendar"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" class="btn btn-success" id="startJobBtn">Start</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
-    
+
     <footer class="footer">
         <div class="container">
-            <span class="text-muted">Brewed with love in belgium - Under MIT Licence - Support:istace.emmanuel@hotmail.com | eis on RocketChat:chat.lghs.be | Manu404 on irc:freenode:#lghs</span>
+            <span class="text-muted">Brewed with love in belgium - Under MIT Licence - Support : istace.emmanuel@hotmail.com | eis on RocketChat:chat.lghs.be | Manu404 on irc:freenode:#lghs</span>
         </div>
     </footer>
 
-    <script src="bootstrap.min.js"></script>
     <script src="jquery.min.js"></script>
+    <script src="bootstrap.bundle.js"></script>
+    <script src="solid.min.js"></script>
+    <script src="fontawesome.min.js"></script>
+    <script src="moment-with-locales.min.js"></script>
+    <script src="tempusdominus-bootstrap-4.min.js"></script>
+
+    <!--<script src="bootstrap-datetimepicker.min.js"></script>-->
 
     <script>
 
-    </script>
+        var refreshOn = true;
+        var lastTime;
 
+        window.setInterval(UpdateRemainingTime, 1000);
+        window.setInterval(UpdateState, 1000);
+
+        $("#pause").click(Pause);
+        $("#cancel").click(Cancel);
+        $("#startJobBtn").click(Start);
+
+        $('#job').hide();
+        $("#startjob").hide();
+
+        $('#datetimepicker1').datetimepicker({
+            format: 'HH:mm:ss',
+            defaultDate: "01/01/2018 00:00:00",
+            icons: {
+                up: "fas fa-arrow-up",
+                down: "fas fa-arrow-down"
+            }
+        });
+
+        function Start() {
+            let time = 0;
+            
+        }
+
+        function Pause() {
+            $.get("http://192.168.4.1/api/pause", function (data, status) { });
+        }
+
+        function Cancel() {
+            $.get("http://192.168.4.1/api/cancel", function (data, status) { });
+        }
+
+        function UpdateState() {
+            $.get("http://192.168.4.1/api/getState", function (data2, status) {
+                if (data2.running || (!data2.runnning && lastTime > 0)) {
+                    $("#running").show();
+                    $("#job").show();
+                    $("#idle").hide();
+                    $("#job").hide();
+                    $('#startjob').hide();
+                }
+                else {
+                    $("#job").hide();
+                    $("#running").hide();
+                    $("#idle").show();
+                    $('#job').hide();
+                    $('#startjob').show();
+                }
+                $('#container').show();
+            });
+        }
+
+        function UpdateRemainingTime() {
+            $.get("http://192.168.4.1/api/getRemainingTime",
+                function (data, status) {
+                    let time = data.remainingTime / data.refreshRate;
+                    lastTime = time;
+                    let hours = Math.floor(time / 3600);
+                    time = time % 3600;
+                    let min = Math.floor(time / 60);
+                    time = time % 60;
+                    sec = Math.floor(time);
+
+                    $("#remainingTime").text(hours + ":" + min + ":" + sec);
+                }
+            );
+        }
+    </script>
 </body>
 </html>
