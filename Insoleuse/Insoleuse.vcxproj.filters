@@ -28,25 +28,46 @@
     <None Include="data\index.html">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="data\bootstrap.min.css">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="data\bootstrap.min.js">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="data\popper.min.js">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="data\jquery.min.js">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="data\bootstrap.bundle.min.js">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="data\logo.svg">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="data\custom.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\moment-with-locales.min.js">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\bootstrap.bundle.js">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\bootstrap.min.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\bootstrap-grid.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\bootstrap-reboot.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\td-bt-4.min.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\td-bt-4.min.js">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\font.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\icomoon.eot">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\icomoon.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\icomoon.woff">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -96,6 +117,9 @@
     <ClInclude Include="Json\ArduinoJson.h">
       <Filter>Header Files\Json</Filter>
     </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Menu.cpp">
@@ -125,5 +149,10 @@
     <ClCompile Include="WebServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="data\icomoon.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
   </ItemGroup>
 </Project>
