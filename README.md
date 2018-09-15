@@ -1,5 +1,5 @@
 # UV Exposure Box
-Code and doc about UV Platesetter V2
+Code and doc about UV Exposure Box v2.0.2
 
 # DevEnv
 I develop with Visual Studio Community 2017 (free) and the extension Visual Micro that give a nice debugging experience. (shareware, 90 days trial, https://www.visualmicro.com/)
