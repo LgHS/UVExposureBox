@@ -14,6 +14,12 @@ Diagrams are made with KiCad (free and open source, http://kicad-pcb.org/downloa
 
 To upload files to rom I use this tool: https://github.com/esp8266/arduino-esp8266fs-plugin/releases/download/0.1.3/ESP8266FS-0.1.3.zip, for more information about how to install and use it to read this article: https://circuits4you.com/2018/01/31/upload-image-png-jpeg-to-esp8266-web-page/
 
+# Web Portal Screenshot
+
+![alt text](https://github.com/LgHS/UVPlatesetter/blob/master/img/startjob.PNG)
+
+![alt text](https://github.com/LgHS/UVPlatesetter/blob/master/img/jobrunning.PNG)
+
 # External Library 
 I use the following libraries for the code:
  - Wire
@@ -25,3 +31,4 @@ I use the following libraries for the code:
  I use the following library for Kicad:
   - Node MCU : https://github.com/MarginallyClever/kicad-ESP8266
   - MCP23017 : https://github.com/mikepurvis/kicad-library-foo/blob/master/MCP23017.lib
+
