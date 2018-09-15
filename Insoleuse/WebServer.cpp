@@ -9,8 +9,10 @@
 #include "Json/ArduinoJson.h"
 #include "Job.h"
 #include "Menu.h"
+#include "Logger.h"
 
 void WebServer::Init() {
+	Logger::getInstance().Debug("WebServer::Init()");
 	SPIFFS.begin();
 
 	WiFi.mode(WIFI_AP);
@@ -34,6 +36,7 @@ void WebServer::Update() {
 }
 
 bool WebServer::LoadFromSpiffs(String path) {
+	Logger::getInstance().Debug("WebServer::LoadFromSpiffs()");
 	String dataType = "text/plain";
 	if (path.endsWith("/")) path += "index.htm";
 
@@ -59,11 +62,13 @@ bool WebServer::LoadFromSpiffs(String path) {
 }
 
 void WebServer::DoHandleRoot() {
+	Logger::getInstance().Debug("WebServer::HandleRoot()");
 	this->server->sendHeader("Location", "/index.html", true);
 	this->server->send(302, "text/plane", "");
 }
 
 void WebServer::DoHandleWebRequests() {
+	Logger::getInstance().Debug("WebServer::HandleWebRequest()");
 	if (LoadFromSpiffs(this->server->uri())) return;
 	String message = "File Not Detected\n\n";
 	message += "URI: ";
@@ -83,10 +88,11 @@ void WebServer::DoHandleWebRequests() {
 }
 
 void WebServer::DoHandleGetState() {
+	Logger::getInstance().Debug("WebServer::HandleGetState()");
 	StaticJsonBuffer<200> jsonBuffer;
 
 	JsonObject& root = jsonBuffer.createObject();
-	root["running"] = Job::getInstance().IsRunning ? true : false;
+	root["running"] = Job::getInstance().IsRunning ? "run" : (Job::getInstance().RemainingTime > 0 ? "pause" : "idle");
 
 	String message;
 	root.printTo(message);
@@ -97,6 +103,7 @@ void WebServer::DoHandleGetState() {
 String getRemainingTimeResponse;
 
 void WebServer::DoHandleGetRemainingTime() {
+	Logger::getInstance().Debug("WebServer::HandleGetRemainingTime()");
 	if (Job::getInstance().IsRunning) {
 		StaticJsonBuffer<200> jsonBuffer;
 
@@ -104,6 +111,7 @@ void WebServer::DoHandleGetRemainingTime() {
 		root["remainingTime"] = Job::getInstance().RemainingTime;
 		root["refreshRate"] = JOB_REFRESH_RATE;
 
+		getRemainingTimeResponse = "";
 		root.printTo(getRemainingTimeResponse);
 	}
 
@@ -111,13 +119,17 @@ void WebServer::DoHandleGetRemainingTime() {
 }
 
 void WebServer::DoHandleCancelJob() {
-	if(ApplicationMenu::getInstance().CurrentScreen == COUNTDOWN_SCREEN)
+	Logger::getInstance().Debug("WebServer::HandleCancelJob()");
+
+	if (ApplicationMenu::getInstance().CurrentScreen == COUNTDOWN_SCREEN)
 		ApplicationMenu::getInstance().BufferedKey = 'C';
 
 	this->server->send(200, "text/json", "");
 }
 
 void WebServer::DoHandlePauseJob() {
+	Logger::getInstance().Debug("WebServer::HandlePauseJob()");
+
 	if (ApplicationMenu::getInstance().CurrentScreen == COUNTDOWN_SCREEN)
 		ApplicationMenu::getInstance().BufferedKey = 'D';
 
@@ -125,6 +137,8 @@ void WebServer::DoHandlePauseJob() {
 }
 
 void WebServer::DoHandleStartJob() {
+	Logger::getInstance().Debug("WebServer::HandleStartJob()");
+
 	int time = -1;
 	for (int i = 0; i < this->server->args(); i++) {
 		if (this->server->argName(i) == "time") {

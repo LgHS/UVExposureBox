@@ -14,18 +14,17 @@
 
 void setup()
 {
-	ApplicationMenu::getInstance().Init();
-	ApplicationMenu::getInstance().Navigate(WELCOME_SCREEN);
-
-	GPIO::getInstance().Init();
-
 	Serial.begin(9600);
-
 	while (!Serial);
 
 	Wire.begin();
 	Wire.beginTransmission(0x3F);
 	Wire.endTransmission();
+
+	ApplicationMenu::getInstance().Init();
+	ApplicationMenu::getInstance().Navigate(WELCOME_SCREEN);
+
+	GPIO::getInstance().Init();
 
 	ReedSwitchSecurity::getInstance().Init();
 	
@@ -40,8 +39,8 @@ void setup()
 
 void loop()
 {
+	WebServer::getInstance().Update();
 	ApplicationMenu::getInstance().Update();
 	Job::getInstance().Update();
 	ReedSwitchSecurity::getInstance().Update();
-	WebServer::getInstance().Update();
 }

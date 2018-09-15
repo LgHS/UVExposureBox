@@ -259,10 +259,9 @@ void Start_Do_D9() {
 }
 
 void Job_Do_C() {
-	if (Job::getInstance().IsRunning) {
+	if (Job::getInstance().IsRunning || (!Job::getInstance().IsRunning && Job::getInstance().RemainingTime > 0)) {
 		Job::getInstance().Stop();
 		Job::getInstance().Reset();
-		ApplicationMenu::getInstance().CleanLCDVariable();
 		ApplicationMenu::getInstance().Navigate(HOME_SCREEN);
 	}
 }

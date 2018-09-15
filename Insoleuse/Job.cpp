@@ -8,8 +8,10 @@
 #include "Menu.h"
 #include "Piezo.h"
 #include "UVStrip.h"
+#include "Logger.h"
 
 void Job::SetDuration(int time) {
+	Logger::getInstance().Debug("Job::SetDuration()");
 	this->RemainingTime = time * JOB_REFRESH_RATE;
 }
 
@@ -27,6 +29,7 @@ void DecreaseRemainingTime() {
 }
 
 void Job::Start() {
+	Logger::getInstance().Debug("Job::Start()");
 	t.stop(0);
 	t.every(1000 / JOB_REFRESH_RATE, DecreaseRemainingTime, this->RemainingTime);
 	UVStrip::getInstance().Start();
@@ -35,6 +38,7 @@ void Job::Start() {
 }
 
 void Job::Stop() {
+	Logger::getInstance().Debug("Job::Stop()");
 	if (!this->IsRunning) return;
 	UVStrip::getInstance().Stop();
 	t.stop(0);
@@ -46,7 +50,11 @@ void Job::Stop() {
 }
 
 void Job::Reset() {
-	t.stop(0);
+	Logger::getInstance().Debug("Job::Reset()");
+
+	if(this->IsRunning)
+		t.stop(0);
+
 	this->RemainingTime = 0;
 	this->IsRunning = false;
 }

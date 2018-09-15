@@ -10,16 +10,15 @@
     <link rel="stylesheet" href="bootstrap-reboot.css">
     <link rel="stylesheet" href="bootstrap.min.css">
     <link rel="stylesheet" href="bootstrap-grid.css">
-    <link rel="stylesheet" href="solid.min.css">
-    <link rel="stylesheet" href="fontawesome.min.css">
     <link rel="stylesheet" href="custom.css">
-    <link rel="stylesheet" href="tempusdominus-bootstrap-4.min.css">
+    <link rel="stylesheet" href="font.css">
+    <link rel="stylesheet" href="td-bt-4.min.css">
 </head>
 <body>
     <main class="container" role="main" id="container">
         <div class="row" style="margin-top: 20px">
             <div class="col-sm-8 my-auto">
-                <h1>Insoleuse V2.0.2</h1>
+                <h1>Insoleuse v2.0.2</h1>
             </div>
             <div class="col-sm-4">
                 <img src="logo.svg"
@@ -34,9 +33,11 @@
                 <div class="card">
                     <div class="card-header">Status</div>
                     <div class="card-body card-text">
-                        <h4>
-                            <span class="badge badge-success" id="running" style="display: none">Running</span><span class="badge badge-warning" id="idle" style="display: none">Idle</span>
-                        </h4>
+                        <h5>
+                            <span class="badge badge-success" id="running" style="display: none">Running</span>
+                            <span class="badge badge-warning" id="paused" style="display: none">Paused</span>
+                            <span class="badge badge-info" id="idle" style="display: none">Idle</span>
+                        </h5>
                     </div>
                 </div>
             </div>
@@ -46,10 +47,28 @@
             <div class="col-sm-12" id="job">
                 <div class="card">
                     <div class="card-header">Current Job</div>
-                    <div class="card-body card-text">
-                        <p>Remaining time: <span id="remainingTime">00:00:00</span></p>
-                        <button type="button" class="btn btn-danger" id="cancel">Cancel</button>
-                        <button type="button" class="btn btn-warning" id="pause">Pause/Continue</button>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="input-group date">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon3">
+                                                Remaining time
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" id="remainingTime" value="00:00:00" readonly />
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-warning" id="pause">Pause</button>
+                                            <button type="button" class="btn btn-success" id="continue">Continue</button>
+                                        </div>
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-danger" id="cancel">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -58,21 +77,24 @@
         <div class="row" style="margin-top: 15px;">
             <div class="col-sm-12" id="startjob">
                 <div class="card">
-                    <div class="card-header">Create Job</div>
+                    <div class="card-header">Start Job</div>
                     <div class="card-body card-text">
                         <div class="row">
-                            <div class="col-sm-11">
+                            <div class="col-sm-12">
                                 <div class="form-group">
                                     <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon3">Duration</span>
+                                        </div>
                                         <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" />
                                         <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
-                                            <div class="input-group-text"><i class="fas fa-calendar"></i></div>
+                                            <div class="input-group-text"><i class="icon-stopwatch"></i></div>
+                                        </div>
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-success" id="startJobBtn">Start</button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-1">
-                                <button type="button" class="btn btn-success" id="startJobBtn">Start</button>
                             </div>
                         </div>
                     </div>
@@ -89,10 +111,8 @@
 
     <script src="jquery.min.js"></script>
     <script src="bootstrap.bundle.js"></script>
-    <script src="solid.min.js"></script>
-    <script src="fontawesome.min.js"></script>
     <script src="moment-with-locales.min.js"></script>
-    <script src="tempusdominus-bootstrap-4.min.js"></script>
+    <script src="td-bt-4.min.js"></script>
 
     <!--<script src="bootstrap-datetimepicker.min.js"></script>-->
 
@@ -105,8 +125,10 @@
         window.setInterval(UpdateState, 1000);
 
         $("#pause").click(Pause);
+        $("#continue").click(Pause);
         $("#cancel").click(Cancel);
         $("#startJobBtn").click(Start);
+        $("#startJobBtn").attr('disabled', 'disabled');
 
         $('#job').hide();
         $("#startjob").hide();
@@ -115,14 +137,29 @@
             format: 'HH:mm:ss',
             defaultDate: "01/01/2018 00:00:00",
             icons: {
-                up: "fas fa-arrow-up",
-                down: "fas fa-arrow-down"
+                up: "icon-arrow-up2",
+                down: "icon-arrow-down2"
+            }
+        });
+        
+        $('#datetimepicker1').on('change.datetimepicker', function (event) {
+            if (GetSeconds() > 0) {
+                $("#startJobBtn").removeAttr('disabled');
+            } else {
+                $("#startJobBtn").attr('disabled', 'disabled');
             }
         });
 
-        function Start() {
+        function GetSeconds() {
             let time = 0;
-            
+            time += $('#datetimepicker1').datetimepicker('date').hours() * 3600;
+            time += $('#datetimepicker1').datetimepicker('date').minutes() * 60;
+            time += $('#datetimepicker1').datetimepicker('date').seconds();
+            return time;
+        }
+
+        function Start() {
+            $.get("http://192.168.4.1/api/start?time=" + GetSeconds(), function (data, status) { });
         }
 
         function Pause() {
@@ -135,20 +172,32 @@
 
         function UpdateState() {
             $.get("http://192.168.4.1/api/getState", function (data2, status) {
-                if (data2.running || (!data2.runnning && lastTime > 0)) {
-                    $("#running").show();
+                $("#running").hide();
+                $("#paused").hide();
+                $("#idle").hide();
+
+                $("#pause").hide();
+                $("#continue").hide();
+
+                $('#job').hide();
+                $('#startjob').hide();
+
+                if (data2.running == "run" || data2.running == "pause") {
                     $("#job").show();
-                    $("#idle").hide();
-                    $("#job").hide();
-                    $('#startjob').hide();
+                    if (data2.running == "run") {
+                        $("#pause").show();
+                        $("#running").show();
+                    }
+                    else {
+                        $("#continue").show();
+                        $("#paused").show();
+                    }
                 }
                 else {
-                    $("#job").hide();
-                    $("#running").hide();
                     $("#idle").show();
-                    $('#job').hide();
                     $('#startjob').show();
                 }
+
                 $('#container').show();
             });
         }
@@ -164,9 +213,15 @@
                     time = time % 60;
                     sec = Math.floor(time);
 
-                    $("#remainingTime").text(hours + ":" + min + ":" + sec);
+                    $("#remainingTime").val(pad(hours, 2) + ":" + pad(min, 2) + ":" + pad(sec, 2));
                 }
             );
+        }
+
+        function pad(num, size) {
+            var s = num + "";
+            while (s.length < size) s = "0" + s;
+            return s;
         }
     </script>
 </body>
