@@ -147,6 +147,7 @@ public:
 	void ResetTime();
 	   
 	int CurrentScreen = -1;
+	char BufferedKey;
 private:
 	int currentCaretPosition = 0;
 	const char timeTemplate[8] = { 'h','h',':','m','m',':','s','s' };
@@ -171,6 +172,7 @@ private:
 
 	bool IsValidDigitalInput(char c, int position);
 	void UpdateStartDisplayedTime(char* time);
+	void ExecuteKey(char key);
 };
 
 #endif

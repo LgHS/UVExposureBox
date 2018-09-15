@@ -8,6 +8,7 @@
 #include "WebServer.h"
 #include "Json/ArduinoJson.h"
 #include "Job.h"
+#include "Menu.h"
 
 void WebServer::Init() {
 	SPIFFS.begin();
@@ -21,6 +22,9 @@ void WebServer::Init() {
 	this->server->on("/", HandleRoot);
 	this->server->on("/api/getRemainingTime", HandleGetRemainingTime);
 	this->server->on("/api/getState", HandleGetState);
+	this->server->on("/api/pause", HandlePauseJob);
+	this->server->on("/api/cancel", HandleCancelJob);
+	this->server->on("/api/start", HandleStartJob);
 	this->server->onNotFound(HandleWebRequests);
 	this->server->begin();
 }
@@ -73,15 +77,16 @@ void WebServer::DoHandleWebRequests() {
 		message += " NAME:" + this->server->argName(i) + "\n VALUE:" + this->server->arg(i) + "\n";
 	}
 	this->server->send(404, "text/plain", message);
-	if (DEBUG)
-		Serial.println(message);
+#ifdef DEBUG
+	Serial.println(message);
+#endif
 }
 
 void WebServer::DoHandleGetState() {
 	StaticJsonBuffer<200> jsonBuffer;
 
 	JsonObject& root = jsonBuffer.createObject();
-	root["running"] = Job::getInstance().IsRunning ? "true" : "false";
+	root["running"] = Job::getInstance().IsRunning ? true : false;
 
 	String message;
 	root.printTo(message);
@@ -89,21 +94,47 @@ void WebServer::DoHandleGetState() {
 	this->server->send(200, "text/json", message);
 }
 
+String getRemainingTimeResponse;
+
 void WebServer::DoHandleGetRemainingTime() {
-	StaticJsonBuffer<200> jsonBuffer;
+	if (Job::getInstance().IsRunning) {
+		StaticJsonBuffer<200> jsonBuffer;
 
-	JsonObject& root = jsonBuffer.createObject();
-	root["sensor"] = "gps";
-	root["time"] = 1351824120;
+		JsonObject& root = jsonBuffer.createObject();
+		root["remainingTime"] = Job::getInstance().RemainingTime;
+		root["refreshRate"] = JOB_REFRESH_RATE;
 
-	JsonArray& data = root.createNestedArray("data");
-	data.add(48.756080);
-	data.add(2.302038);
+		root.printTo(getRemainingTimeResponse);
+	}
 
-	String message;
-	root.printTo(message);
+	this->server->send(200, "text/json", getRemainingTimeResponse);
+}
 
-	this->server->send(200, "text/json", message);
+void WebServer::DoHandleCancelJob() {
+	if(ApplicationMenu::getInstance().CurrentScreen == COUNTDOWN_SCREEN)
+		ApplicationMenu::getInstance().BufferedKey = 'C';
+
+	this->server->send(200, "text/json", "");
+}
+
+void WebServer::DoHandlePauseJob() {
+	if (ApplicationMenu::getInstance().CurrentScreen == COUNTDOWN_SCREEN)
+		ApplicationMenu::getInstance().BufferedKey = 'D';
+
+	this->server->send(200, "text/json", "");
+}
+
+void WebServer::DoHandleStartJob() {
+	int time = -1;
+	for (int i = 0; i < this->server->args(); i++) {
+		if (this->server->argName(i) == "time") {
+			time = this->server->arg(i).toInt();
+		}
+	}
+	if (time == -1) return;
+	ApplicationMenu::getInstance().SetJobRemainingTime(time);
+	Start_Do_A();
+	this->server->send(200, "text / plain", "");
 }
 
 void HandleWebRequests() {
@@ -120,5 +151,16 @@ void HandleGetState() {
 
 void HandleGetRemainingTime() {
 	WebServer::getInstance().DoHandleGetRemainingTime();
+}
 
+void HandleCancelJob() {
+	WebServer::getInstance().DoHandleCancelJob();
+}
+
+void HandlePauseJob() {
+	WebServer::getInstance().DoHandlePauseJob();
+}
+
+void HandleStartJob() {
+	WebServer::getInstance().DoHandleStartJob();
 }

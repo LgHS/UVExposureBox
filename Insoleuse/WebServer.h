@@ -12,6 +12,9 @@ void HandleWebRequests();
 void HandleRoot();
 void HandleGetState();
 void HandleGetRemainingTime();
+void HandleCancelJob();
+void HandlePauseJob();
+void HandleStartJob();
 
 class WebServer {
 public:
@@ -26,6 +29,9 @@ public:
 	void DoHandleRoot();
 	void DoHandleGetState();
 	void DoHandleGetRemainingTime();
+	void DoHandleCancelJob();
+	void DoHandlePauseJob();
+	void DoHandleStartJob();
 
 	char* GetIp() {
 		myIP.toString().toCharArray(ipChar, 16);

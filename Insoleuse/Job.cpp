@@ -35,6 +35,7 @@ void Job::Start() {
 }
 
 void Job::Stop() {
+	if (!this->IsRunning) return;
 	UVStrip::getInstance().Stop();
 	t.stop(0);
 	if (this->RemainingTime <= 0) {
@@ -45,6 +46,7 @@ void Job::Stop() {
 }
 
 void Job::Reset() {
+	t.stop(0);
 	this->RemainingTime = 0;
 	this->IsRunning = false;
 }
