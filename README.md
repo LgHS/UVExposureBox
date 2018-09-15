@@ -31,4 +31,9 @@ I use the following libraries for the code:
  I use the following library for Kicad:
   - Node MCU : https://github.com/MarginallyClever/kicad-ESP8266
   - MCP23017 : https://github.com/mikepurvis/kicad-library-foo/blob/master/MCP23017.lib
+  
+  # Support
+Brewed with love in belgium - Under MIT Licence
+
+Support : istace.emmanuel@hotmail.com | eis on RocketChat:chat.lghs.be | Manu404 on irc:freenode:#lghs
 
