@@ -1,4 +1,4 @@
-# UVPlatesetter
+# UV Exposure Box
 Code and doc about UV Platesetter V2
 
 # DevEnv
