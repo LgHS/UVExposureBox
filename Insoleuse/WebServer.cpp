@@ -53,6 +53,7 @@ bool WebServer::LoadFromSpiffs(String path) {
 	else if (path.endsWith(".xml")) dataType = "text/xml";
 	else if (path.endsWith(".pdf")) dataType = "application/pdf";
 	else if (path.endsWith(".zip")) dataType = "application/zip";
+	else if (path.endsWith(".mp3")) dataType = "audio/mpeg";
 	File dataFile = SPIFFS.open(path.c_str(), "r");
 	if (this->server->hasArg("download")) dataType = "application/octet-stream";
 	if (this->server->streamFile(dataFile, dataType) != dataFile.size()) {

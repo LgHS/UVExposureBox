@@ -43,6 +43,7 @@ void ApplicationMenu::Navigate(int screen) {
 void ApplicationMenu::UpdateStartDisplayedTime(char * newtime) {
 	this->startScreen->StartScreenTime = newtime;
 	this->menu->update();
+	this->requireStartLCDCleanup = true;
 }
 
 void ApplicationMenu::SetJobRemainingTime(int countdown) {
@@ -71,13 +72,25 @@ void ApplicationMenu::SetJobRemainingTime(int countdown) {
 
 	this->jobScreen->CountdownTime = this->remaningJobTime;
 	this->menu->update();
+	this->requireJobLCDCleanup = true;
+}
+
+void ApplicationMenu::SetTemp(char* temp) {
+	this->jobScreen->Temp = temp;
+	this->menu->update();
 }
 
 void ApplicationMenu::CleanLCDVariable() {
-	memset(this->jobScreen->CountdownTime, '\0', 8 * sizeof(char));
-	memset(this->startScreen->StartScreenTime, '\0', 8 * sizeof(char));
-	memset(this->remainingTime, '\0', 8 * sizeof(char));
-	memset(this->remaningJobTime, '\0', 8 * sizeof(char));
+	if (this->requireJobLCDCleanup == true) {
+		memset(this->jobScreen->CountdownTime, '\0', 8 * sizeof(char));
+		memset(this->remaningJobTime, '\0', 8 * sizeof(char));
+		this->requireJobLCDCleanup = false;
+	}
+	if (this->requireStartLCDCleanup == true) {
+		memset(this->startScreen->StartScreenTime, '\0', 8 * sizeof(char));
+		memset(this->remainingTime, '\0', 8 * sizeof(char));
+		this->requireStartLCDCleanup = false;
+	}
 }
 
 void ApplicationMenu::ExecuteKey(char key) {

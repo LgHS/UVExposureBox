@@ -104,10 +104,11 @@ class JobScreen {
 private:
 	LiquidLine* line1 = new LiquidLine(0, 0, "UV running          ");
 	LiquidLine* line3 = new LiquidLine(0, 1, "Time rem.  ", CountdownTime);
-	LiquidLine* line2 = new LiquidLine(0, 2, "");
+	LiquidLine* line2 = new LiquidLine(0, 2, "Temp.      ", Temp);
 	LiquidLine* line4 = new LiquidLine(0, 3, "C:Cancel D:Pause    ");
 public:
 	char* CountdownTime;
+	char* Temp;
 	JobScreen() {
 		this->Screen->attach_function(KPC, Job_Do_C);
 		this->Screen->attach_function(KPD, Job_Do_D);
@@ -142,6 +143,7 @@ public:
 	int GetSeconds();
 	void SetJobRemainingTime(int countdown);
 	void SetSettingsIp(char* ip);
+	void SetTemp(char* temp);
 	void CleanLCDVariable();
 	void PushNumber(char newNumber);
 	void ResetTime();
@@ -153,6 +155,8 @@ private:
 	const char timeTemplate[8] = { 'h','h',':','m','m',':','s','s' };
 	char * remainingTime = "hh:mm:ss";
 	char * remaningJobTime = "hh:mm:ss";
+	bool requireStartLCDCleanup = false;
+	bool requireJobLCDCleanup = false;
 	
 	Timer* t = new Timer();
 	

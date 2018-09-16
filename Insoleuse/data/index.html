@@ -13,6 +13,86 @@
     <link rel="stylesheet" href="custom.css">
     <link rel="stylesheet" href="font.css">
     <link rel="stylesheet" href="td-bt-4.min.css">
+
+    <style type="text/css">
+        .lds-ripple {
+            display: inline-block;
+            position: relative;
+            width: 64px;
+            height: 64px;
+        }
+
+        .lds-ripple div {
+            position: absolute;
+            border: 4px solid #cef;
+            opacity: 1;
+            border-radius: 50%;
+            animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+        }
+
+        .lds-ripple div:nth-child(2) {
+            animation-delay: -0.5s;
+        }
+
+        @keyframes lds-ripple {
+            0% {
+                top: 28px;
+                left: 28px;
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+
+            100% {
+                top: -1px;
+                left: -1px;
+                width: 58px;
+                height: 58px;
+                opacity: 0;
+            }
+        }
+
+        .lds-hourglass {
+            display: inline-block;
+            position: relative;
+            width: 24px;
+            height: 24px;
+        }
+
+            .lds-hourglass:after {
+                content: " ";
+                display: block;
+                border-radius: 50%;
+                width: 0;
+                height: 0;
+                margin: 2px;
+                box-sizing: border-box;
+                border: 10px solid #5a5a5a;
+                border-color: #5a5a5a transparent #5a5a5a transparent;
+                animation: lds-hourglass 1.2s infinite;
+            }
+
+        @keyframes lds-hourglass {
+            0% {
+                transform: rotate(0);
+                animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+            }
+
+            50% {
+                transform: rotate(900deg);
+                animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+            }
+
+            100% {
+                transform: rotate(1800deg);
+            }
+        }
+
+        
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <main class="container" role="main" id="container">
@@ -28,7 +108,16 @@
             </div>
         </div>
 
-        <div class="row" style="margin-top: 15px;">
+        <div class="row h-50 justify-content-center align-items-center" id="loading" style="margin-top: 20px;">
+            <div class="col-sm-1 justify-content-center">
+                <div class="lds-ripple">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row hidden" style="margin-top: 15px;" id="status">
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">Status</div>
@@ -43,8 +132,8 @@
             </div>
         </div>
 
-        <div class="row" style="margin-top: 15px;">
-            <div class="col-sm-12" id="job">
+        <div class="row hidden" style="margin-top: 15px;" id="job">
+            <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">Current Job</div>
                     <div class="card-body">
@@ -58,6 +147,11 @@
                                             </span>
                                         </div>
                                         <input type="text" class="form-control" id="remainingTime" value="00:00:00" readonly />
+                                        <div class="input-group-append" id="loadingJob">
+                                            <span class="input-group-text" id="basic-addon3">
+                                                <div class="lds-hourglass"></div>
+                                            </span>
+                                        </div>
                                         <div class="input-group-append">
                                             <button type="button" class="btn btn-warning" id="pause">Pause</button>
                                             <button type="button" class="btn btn-success" id="continue">Continue</button>
@@ -69,13 +163,15 @@
                                 </div>
                             </div>
                         </div>
+
+                    </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row" style="margin-top: 15px;">
-            <div class="col-sm-12" id="startjob">
+        <div class="row hidden" style="margin-top: 15px;" id="startjob">
+            <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">Start Job</div>
                     <div class="card-body card-text">
@@ -97,7 +193,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -108,6 +203,11 @@
             <span class="text-muted">Brewed with love in belgium - Under MIT Licence - Support : istace.emmanuel@hotmail.com | eis on RocketChat:chat.lghs.be | Manu404 on irc:freenode:#lghs</span>
         </div>
     </footer>
+
+    <audio id="notification">
+        <source src="notification.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
     <script src="jquery.min.js"></script>
     <script src="bootstrap.bundle.js"></script>
@@ -120,6 +220,7 @@
 
         var refreshOn = true;
         var lastTime;
+        var lastState;
 
         window.setInterval(UpdateRemainingTime, 1000);
         window.setInterval(UpdateState, 1000);
@@ -130,8 +231,6 @@
         $("#startJobBtn").click(Start);
         $("#startJobBtn").attr('disabled', 'disabled');
 
-        $('#job').hide();
-        $("#startjob").hide();
 
         $('#datetimepicker1').datetimepicker({
             format: 'HH:mm:ss',
@@ -141,7 +240,7 @@
                 down: "icon-arrow-down2"
             }
         });
-        
+
         $('#datetimepicker1').on('change.datetimepicker', function (event) {
             if (GetSeconds() > 0) {
                 $("#startJobBtn").removeAttr('disabled');
@@ -170,8 +269,17 @@
             $.get("http://192.168.4.1/api/cancel", function (data, status) { });
         }
 
+        function Enable(target) {
+            $(target).removeClass("hidden");
+        }
+
+        function Disable(target) {
+            $(target).addClass("hidden");
+        }
+
         function UpdateState() {
             $.get("http://192.168.4.1/api/getState", function (data2, status) {
+                $("#loadingJob").hide();
                 $("#running").hide();
                 $("#paused").hide();
                 $("#idle").hide();
@@ -179,14 +287,15 @@
                 $("#pause").hide();
                 $("#continue").hide();
 
-                $('#job').hide();
-                $('#startjob').hide();
+                Disable('#job');
+                Disable('#startjob');
 
                 if (data2.running == "run" || data2.running == "pause") {
-                    $("#job").show();
+                    Enable('#job');
                     if (data2.running == "run") {
                         $("#pause").show();
                         $("#running").show();
+                        $("#loadingJob").show();
                     }
                     else {
                         $("#continue").show();
@@ -194,11 +303,15 @@
                     }
                 }
                 else {
+                    if (lastState == "run")
+                        $('#notification')[0].play();
                     $("#idle").show();
-                    $('#startjob').show();
+                    Enable('#startjob');
                 }
+                Enable('#status');
+                Disable('#loading');
 
-                $('#container').show();
+                lastState = data2.running;
             });
         }
 
