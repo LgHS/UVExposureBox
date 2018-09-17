@@ -12,6 +12,7 @@ void HandleWebRequests();
 void HandleRoot();
 void HandleGetState();
 void HandleGetRemainingTime();
+void HandleGetTemperature();
 void HandleCancelJob();
 void HandlePauseJob();
 void HandleStartJob();
@@ -32,6 +33,7 @@ public:
 	void DoHandleCancelJob();
 	void DoHandlePauseJob();
 	void DoHandleStartJob();
+	void DoHandleGetTemperature();
 
 	char* GetIp() {
 		myIP.toString().toCharArray(ipChar, 16);
@@ -39,6 +41,9 @@ public:
 	}
 
 private:
+	String getRemainingTimeResponse;
+	String getTempResponse;
+
 	char* ipChar = "xxx.xxx.xxx.xxx";
 	IPAddress myIP;
 	ESP8266WebServer* server = new ESP8266WebServer(WEBSERVER_PORT);

@@ -42,8 +42,8 @@ void ApplicationMenu::Navigate(int screen) {
 
 void ApplicationMenu::UpdateStartDisplayedTime(char * newtime) {
 	this->startScreen->StartScreenTime = newtime;
-	this->menu->update();
 	this->requireStartLCDCleanup = true;
+	this->menu->update();
 }
 
 void ApplicationMenu::SetJobRemainingTime(int countdown) {
@@ -77,7 +77,9 @@ void ApplicationMenu::SetJobRemainingTime(int countdown) {
 
 void ApplicationMenu::SetTemp(char* temp) {
 	this->jobScreen->Temp = temp;
-	this->menu->update();
+
+	if (this->CurrentScreen == JOB_SCREEN)
+		this->menu->update();
 }
 
 void ApplicationMenu::CleanLCDVariable() {
@@ -231,7 +233,7 @@ void Home_Do_B() {
 }
 
 void Start_Do_A() {
-	ApplicationMenu::getInstance().Navigate(COUNTDOWN_SCREEN);
+	ApplicationMenu::getInstance().Navigate(JOB_SCREEN);
 	Job::getInstance().SetDuration(ApplicationMenu::getInstance().GetSeconds());
 	Job::getInstance().Start();
 }

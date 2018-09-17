@@ -11,12 +11,13 @@
 #include "Menu.h"
 #include <Wire.h>
 #include "Config.h"
+#include "TemperatureSensor.h"
 
 void setup()
 {
 	Serial.begin(9600);
 	while (!Serial);
-
+	
 	Wire.begin();
 	Wire.beginTransmission(0x3F);
 	Wire.endTransmission();
@@ -27,6 +28,7 @@ void setup()
 	GPIO::getInstance().Init();
 
 	ReedSwitchSecurity::getInstance().Init();
+	TemperatureSensor::getInstance().Init();
 	
 	WebServer::getInstance().Init();
 
@@ -35,6 +37,7 @@ void setup()
 	ApplicationMenu::getInstance().Navigate(HOME_SCREEN);
 
 	ReedSwitchSecurity::getInstance().Start();
+	TemperatureSensor::getInstance().Start();
 }
 
 void loop()
@@ -43,4 +46,5 @@ void loop()
 	ApplicationMenu::getInstance().Update();
 	Job::getInstance().Update();
 	ReedSwitchSecurity::getInstance().Update();
+	TemperatureSensor::getInstance().Update();
 }

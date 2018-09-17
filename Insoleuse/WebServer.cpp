@@ -10,6 +10,7 @@
 #include "Job.h"
 #include "Menu.h"
 #include "Logger.h"
+#include "TemperatureSensor.h"
 
 void WebServer::Init() {
 	Logger::getInstance().Debug("WebServer::Init()");
@@ -24,6 +25,7 @@ void WebServer::Init() {
 	this->server->on("/", HandleRoot);
 	this->server->on("/api/getRemainingTime", HandleGetRemainingTime);
 	this->server->on("/api/getState", HandleGetState);
+	this->server->on("/api/getTemperature", HandleGetTemperature);
 	this->server->on("/api/pause", HandlePauseJob);
 	this->server->on("/api/cancel", HandleCancelJob);
 	this->server->on("/api/start", HandleStartJob);
@@ -101,8 +103,6 @@ void WebServer::DoHandleGetState() {
 	this->server->send(200, "text/json", message);
 }
 
-String getRemainingTimeResponse;
-
 void WebServer::DoHandleGetRemainingTime() {
 	Logger::getInstance().Debug("WebServer::HandleGetRemainingTime()");
 	if (Job::getInstance().IsRunning) {
@@ -119,10 +119,26 @@ void WebServer::DoHandleGetRemainingTime() {
 	this->server->send(200, "text/json", getRemainingTimeResponse);
 }
 
+void WebServer::DoHandleGetTemperature() {
+	Logger::getInstance().Debug("WebServer::HandleGetTemperature()");
+	if (Job::getInstance().IsRunning) {
+		StaticJsonBuffer<200> jsonBuffer;
+
+		JsonObject& root = jsonBuffer.createObject();
+		root["temperature"] = TemperatureSensor::getInstance().GetTemp();
+
+		getTempResponse = "";
+		root.printTo(getTempResponse);
+		this->server->send(200, "text/json", getTempResponse);
+	}
+
+	this->server->send(200, "text/json", "");
+}
+
 void WebServer::DoHandleCancelJob() {
 	Logger::getInstance().Debug("WebServer::HandleCancelJob()");
 
-	if (ApplicationMenu::getInstance().CurrentScreen == COUNTDOWN_SCREEN)
+	if (ApplicationMenu::getInstance().CurrentScreen == JOB_SCREEN)
 		ApplicationMenu::getInstance().BufferedKey = 'C';
 
 	this->server->send(200, "text/json", "");
@@ -131,7 +147,7 @@ void WebServer::DoHandleCancelJob() {
 void WebServer::DoHandlePauseJob() {
 	Logger::getInstance().Debug("WebServer::HandlePauseJob()");
 
-	if (ApplicationMenu::getInstance().CurrentScreen == COUNTDOWN_SCREEN)
+	if (ApplicationMenu::getInstance().CurrentScreen == JOB_SCREEN)
 		ApplicationMenu::getInstance().BufferedKey = 'D';
 
 	this->server->send(200, "text/json", "");
@@ -178,4 +194,12 @@ void HandlePauseJob() {
 
 void HandleStartJob() {
 	WebServer::getInstance().DoHandleStartJob();
+}
+
+void HandleGetTemperature() {
+	WebServer::getInstance().DoHandleGetTemperature();
+}
+
+void OnTemperatureTick() {
+	TemperatureSensor::getInstance().DoOnTempTick();
 }

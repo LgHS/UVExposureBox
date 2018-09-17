@@ -21,9 +21,10 @@
 #define HOME_SCREEN 1
 #define START_SCREEN 2
 #define SETTING_SCREEN 3
-#define COUNTDOWN_SCREEN 4
+#define JOB_SCREEN 4
 
 #define JOB_REFRESH_RATE 10
+#define TEMP_REFRESH_RATE_MS 1000
 
 #define DEBUG true
 

@@ -30,20 +30,20 @@ public:
 	void OnTick() {
 
 		if (!digitalRead(GPIO::getInstance().ReedSwitchPin) && !IsPaused) {
-			if (Job::getInstance().IsRunning && ApplicationMenu::getInstance().CurrentScreen == COUNTDOWN_SCREEN) {
+			if (Job::getInstance().IsRunning && ApplicationMenu::getInstance().CurrentScreen == JOB_SCREEN) {
 				Job::getInstance().Stop();
 				IsPaused = true;
 				Piezo::getInstance().Tone(C5, 250);
 			}
 		}
 		else if (digitalRead(GPIO::getInstance().ReedSwitchPin) && IsPaused) {
-			if (!Job::getInstance().IsRunning && ApplicationMenu::getInstance().CurrentScreen == COUNTDOWN_SCREEN) {
+			if (!Job::getInstance().IsRunning && ApplicationMenu::getInstance().CurrentScreen == JOB_SCREEN) {
 				Job::getInstance().Start();
 				IsPaused = false;
 				Piezo::getInstance().Tone(C6, 250);
 			}
 		}
-		else if (ApplicationMenu::getInstance().CurrentScreen != COUNTDOWN_SCREEN && IsPaused == true) {
+		else if (ApplicationMenu::getInstance().CurrentScreen != JOB_SCREEN && IsPaused == true) {
 			IsPaused = false;
 		}
 	}

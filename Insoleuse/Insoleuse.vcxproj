@@ -113,11 +113,16 @@
     <None Include="data\bootstrap.min.css" />
     <None Include="data\custom.css" />
     <None Include="data\font.css" />
+    <None Include="data\foundation.css" />
+    <None Include="data\gauge.min.js" />
     <None Include="data\icomoon.eot" />
     <None Include="data\icomoon.svg" />
     <None Include="data\icomoon.woff" />
     <None Include="data\index.html" />
+    <None Include="data\industrial.css" />
+    <None Include="data\industrial.js" />
     <None Include="data\jquery.min.js" />
+    <None Include="data\jquery.tempgauge.js" />
     <None Include="data\logo.svg" />
     <None Include="data\moment-with-locales.min.js" />
     <None Include="data\td-bt-4.min.css" />
@@ -140,6 +145,7 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Piezo.h" />
     <ClInclude Include="ReedSwitchSecurity.h" />
+    <ClInclude Include="TemperatureSensor.h" />
     <ClInclude Include="UVStrip.h" />
     <ClInclude Include="WebServer.h" />
     <ClInclude Include="__vm\.Insoleuse.vsarduino.h" />
@@ -157,6 +163,9 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="data\icomoon.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="data\notification.mp3" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

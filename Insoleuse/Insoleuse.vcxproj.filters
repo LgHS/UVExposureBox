@@ -70,6 +70,21 @@
     <None Include="data\icomoon.woff">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="data\jquery.tempgauge.js">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\foundation.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\industrial.css">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\industrial.js">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="data\gauge.min.js">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.Insoleuse.vsarduino.h">
@@ -120,6 +135,9 @@
     <ClInclude Include="Logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TemperatureSensor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Menu.cpp">
@@ -154,5 +172,10 @@
     <Font Include="data\icomoon.ttf">
       <Filter>Resource Files</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="data\notification.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>
