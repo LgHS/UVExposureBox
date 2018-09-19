@@ -27,6 +27,9 @@ public:
 	void Update() {
 		t.update();
 	}
+	void Stop() {
+		t.stop(0);
+	}
 	void OnTick() {
 
 		if (!digitalRead(GPIO::getInstance().ReedSwitchPin) && !IsPaused) {

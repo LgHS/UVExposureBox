@@ -4,9 +4,10 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <FS.h>
+#include "Json/ArduinoJson.h"
 #include "Config.h"
 #include "WebServer.h"
-#include "Json/ArduinoJson.h"
+#include "SpiffsConfig.h"
 #include "Job.h"
 #include "Menu.h"
 #include "Logger.h"
@@ -14,14 +15,34 @@
 
 void WebServer::Init() {
 	Logger::getInstance().Debug("WebServer::Init()");
-	SPIFFS.begin();
+	if (!SpiffsConfig::getInstance().Data->APEnabled)
+		this->StartAP();
+	else
+		this->ConnectToWiFi();
+	this->StartServer();
+}
 
+void WebServer::ConnectToWiFi() {
+
+	Logger::getInstance().Debug("Connect to WiFi");
+	WiFi.mode(WIFI_STA);
+	WiFi.begin(SpiffsConfig::getInstance().Data->TargetSSID, SpiffsConfig::getInstance().Data->TargetPassword);
+	while (WiFi.status() != WL_CONNECTED) {
+		delay(500);
+		Serial.print(".");
+	}
+	this->myIP = WiFi.localIP();
+	Logger::getInstance().Debug("Connected");
+}
+
+void WebServer::StartAP() {
 	WiFi.mode(WIFI_AP);
-	uint8_t mac[WL_MAC_ADDR_LENGTH];
-	WiFi.softAPmacAddress(mac);
-	WiFi.softAP(WEBSERVER_SSID, WEBSERVER_PWD);
+	WiFi.softAP(SpiffsConfig::getInstance().Data->APSSID, SpiffsConfig::getInstance().Data->APPassword);
 	this->myIP = WiFi.softAPIP();
+}
 
+void WebServer::StartServer() {
+	this->server = new ESP8266WebServer(WEBSERVER_PORT);
 	this->server->on("/", HandleRoot);
 	this->server->on("/api/getRemainingTime", HandleGetRemainingTime);
 	this->server->on("/api/getState", HandleGetState);
@@ -31,6 +52,10 @@ void WebServer::Init() {
 	this->server->on("/api/start", HandleStartJob);
 	this->server->onNotFound(HandleWebRequests);
 	this->server->begin();
+}
+
+void WebServer::Stop() {
+	server->stop();
 }
 
 void WebServer::Update() {
@@ -121,18 +146,15 @@ void WebServer::DoHandleGetRemainingTime() {
 
 void WebServer::DoHandleGetTemperature() {
 	Logger::getInstance().Debug("WebServer::HandleGetTemperature()");
-	if (Job::getInstance().IsRunning) {
-		StaticJsonBuffer<200> jsonBuffer;
 
-		JsonObject& root = jsonBuffer.createObject();
-		root["temperature"] = TemperatureSensor::getInstance().GetTemp();
+	StaticJsonBuffer<200> jsonBuffer;
 
-		getTempResponse = "";
-		root.printTo(getTempResponse);
-		this->server->send(200, "text/json", getTempResponse);
-	}
+	JsonObject& root = jsonBuffer.createObject();
+	root["temperature"] = TemperatureSensor::getInstance().GetTemp();
 
-	this->server->send(200, "text/json", "");
+	getTempResponse = "";
+	root.printTo(getTempResponse);
+	this->server->send(200, "text/json", getTempResponse);
 }
 
 void WebServer::DoHandleCancelJob() {
@@ -158,13 +180,17 @@ void WebServer::DoHandleStartJob() {
 
 	int time = -1;
 	for (int i = 0; i < this->server->args(); i++) {
+		if (this->server->arg(i).length() > 100)
+			continue;
+
 		if (this->server->argName(i) == "time") {
 			time = this->server->arg(i).toInt();
 		}
 	}
-	if (time == -1) return;
-	ApplicationMenu::getInstance().SetJobRemainingTime(time);
-	Start_Do_A();
+	if (time > -1) {
+		ApplicationMenu::getInstance().SetJobRemainingTime(time);
+		Start_Do_A();
+	}
 	this->server->send(200, "text / plain", "");
 }
 

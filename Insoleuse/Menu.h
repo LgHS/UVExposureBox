@@ -48,6 +48,11 @@ void Start_Do_D9();
 void Job_Do_D();
 void Job_Do_C();
 void Settings_Do_D();
+void Settings_Do_A();
+void Settings_Do_B();
+void Wifi_Do_D();
+void Wifi_Mode_Do_A();
+void Wifi_Mode_Do_B();
 
 class WelcomeScreen {
 private:
@@ -62,7 +67,7 @@ public:
 class HomeScreen {
 private:
 	LiquidLine* home_line1 = new LiquidLine(0, 0, "Select your option");
-	LiquidLine* home_line2 = new LiquidLine(0, 1, "A:Start");
+	LiquidLine* home_line2 = new LiquidLine(0, 1, "A:Start job");
 	LiquidLine* home_line3 = new LiquidLine(0, 2, "B:Settings");
 	LiquidLine* home_line4 = new LiquidLine(0, 3, "");
 public:
@@ -78,7 +83,7 @@ private:
 	LiquidLine* start_line1 = new LiquidLine(0, 0, "Select your time    ");
 	LiquidLine* start_line2 = new LiquidLine(0, 1, StartScreenTime);
 	LiquidLine* start_line3 = new LiquidLine(0, 2, "A:Start             ");
-	LiquidLine* start_line4 = new LiquidLine(0, 3, "C:Clear D:Return    ");
+	LiquidLine* start_line4 = new LiquidLine(0, 3, "C:Clear     D:Return");
 public:
 	char* StartScreenTime;
 	LiquidScreen* Screen = new LiquidScreen(*start_line1, *start_line2, *start_line3, *start_line4);
@@ -103,9 +108,9 @@ public:
 class JobScreen {
 private:
 	LiquidLine* line1 = new LiquidLine(0, 0, "UV running          ");
-	LiquidLine* line3 = new LiquidLine(0, 1, "Time rem.  ", CountdownTime);
-	LiquidLine* line2 = new LiquidLine(0, 2, "Temp.      ", Temp);
-	LiquidLine* line4 = new LiquidLine(0, 3, "C:Cancel D:Pause    ");
+	LiquidLine* line3 = new LiquidLine(0, 1, "Time rem.   ", CountdownTime);
+	LiquidLine* line2 = new LiquidLine(0, 2, "Temp.         ", Temp);
+	LiquidLine* line4 = new LiquidLine(0, 3, "C:Cancel     D:Pause");
 public:
 	char* CountdownTime;
 	char* Temp;
@@ -118,15 +123,65 @@ public:
 
 class SettingScreen {
 private:
-	LiquidLine* setting_line1 = new LiquidLine(0, 0, "IP   :", Ip);
-	LiquidLine* setting_line3 = new LiquidLine(0, 1, "SSID :", WEBSERVER_SSID);
-	LiquidLine* setting_line2 = new LiquidLine(0, 2, "Pwd  :", WEBSERVER_PWD);
+	LiquidLine* setting_line1 = new LiquidLine(0, 0, "A: Mode");
+	LiquidLine* setting_line3 = new LiquidLine(0, 1, "B: Detail");
+	LiquidLine* setting_line2 = new LiquidLine(0, 2, "");
 	LiquidLine* setting_line4 = new LiquidLine(0, 3, "D:Return");
 public:
-	char* Ip;
 	LiquidScreen* Screen = new LiquidScreen(*setting_line1, *setting_line2, *setting_line3, *setting_line4);
 	SettingScreen() {
+		this->Screen->attach_function(KPA, Settings_Do_A);
+		this->Screen->attach_function(KPB, Settings_Do_B);
 		this->Screen->attach_function(KPD, Settings_Do_D);
+	}
+};
+
+class WifiAPDetailScreen {
+private:
+	LiquidLine* line1 = new LiquidLine(0, 0, "IP  :", IP);
+	LiquidLine* line3 = new LiquidLine(0, 1, "SSID:", SSID);
+	LiquidLine* line2 = new LiquidLine(0, 2, "PWD :", PWD);
+	LiquidLine* line4 = new LiquidLine(0, 3, "D:Return");
+public:
+	char * IP;
+	char * SSID;
+	char * PWD;
+	LiquidScreen* Screen = new LiquidScreen(*line1, *line2, *line3, *line4);
+	WifiAPDetailScreen() {
+		this->Screen->attach_function(KPD, Wifi_Do_D);
+	}
+};
+
+class WifiClientDetailScreen {
+private:
+	LiquidLine* line1 = new LiquidLine(0, 0, "IP  :", IP);
+	LiquidLine* line3 = new LiquidLine(0, 1, "SSID:", SSID);
+	LiquidLine* line2 = new LiquidLine(0, 2, "");
+	LiquidLine* line4 = new LiquidLine(0, 3, "D:Return");
+public:
+	char * IP;
+	char * SSID;
+	LiquidScreen* Screen = new LiquidScreen(*line1, *line2, *line3, *line4);
+	WifiClientDetailScreen() {
+		this->Screen->attach_function(KPD, Wifi_Do_D);
+	}
+};
+
+class WifiModeScreen {
+private:
+	LiquidLine* line1 = new LiquidLine(0, 0, "Current:", Mode);
+	LiquidLine* line3 = new LiquidLine(0, 1, "Select new mode");
+	LiquidLine* line2 = new LiquidLine(0, 2, "A:AP        B:Client");
+	LiquidLine* line4 = new LiquidLine(0, 3, "D:Return");
+public:
+	char * AP = "AP";
+	char * Client = "Client";
+	char * Mode;
+	LiquidScreen* Screen = new LiquidScreen(*line1, *line2, *line3, *line4);
+	WifiModeScreen() {
+		this->Screen->attach_function(KPA, Wifi_Mode_Do_A);
+		this->Screen->attach_function(KPB, Wifi_Mode_Do_B);
+		this->Screen->attach_function(KPD, Wifi_Do_D);
 	}
 };
 
@@ -142,14 +197,16 @@ public:
 	void Update();
 	int GetSeconds();
 	void SetJobRemainingTime(int countdown);
-	void SetSettingsIp(char* ip);
 	void SetTemp(char* temp);
+	void UpdateSettingsVariable();
+
 	void CleanLCDVariable();
 	void PushNumber(char newNumber);
 	void ResetTime();
 	   
 	int CurrentScreen = -1;
 	char BufferedKey;
+	bool RequestRestart = false;
 private:
 	int currentCaretPosition = 0;
 	const char timeTemplate[8] = { 'h','h',':','m','m',':','s','s' };
@@ -169,6 +226,9 @@ private:
 	StartScreen* startScreen = new StartScreen();
 	SettingScreen* settingScreen = new SettingScreen();
 	JobScreen* jobScreen = new JobScreen();
+	WifiModeScreen* wifiModeScreen = new WifiModeScreen();
+	WifiAPDetailScreen* wifiApDetailScreen = new WifiAPDetailScreen();
+	WifiClientDetailScreen* wifiClientDetailScreen = new WifiClientDetailScreen();
 
 	LiquidMenu* menu = new LiquidMenu(*lcd);
 
@@ -177,6 +237,11 @@ private:
 	bool IsValidDigitalInput(char c, int position);
 	void UpdateStartDisplayedTime(char* time);
 	void ExecuteKey(char key);
+
+	void SetSSID();
+	void SetPWD();
+	void SetMode();
+	void SetIp();
 };
 
 #endif

@@ -10,6 +10,7 @@
 #include <Keypad_MC17.h>
 #include "Job.h"
 #include "Piezo.h"
+#include "SpiffsConfig.h"
 
 ApplicationMenu::ApplicationMenu() {
 }
@@ -27,6 +28,8 @@ void ApplicationMenu::Init() {
 	this->menu->add_screen(*this->startScreen->Screen);
 	this->menu->add_screen(*this->settingScreen->Screen);
 	this->menu->add_screen(*this->jobScreen->Screen);
+	this->menu->add_screen(*this->wifiModeScreen->Screen);
+	this->menu->add_screen(*this->wifiApDetailScreen->Screen);
 	
 	this->menu->update();
 
@@ -80,6 +83,36 @@ void ApplicationMenu::SetTemp(char* temp) {
 
 	if (this->CurrentScreen == JOB_SCREEN)
 		this->menu->update();
+}
+
+void ApplicationMenu::UpdateSettingsVariable() {
+	Logger::getInstance().Debug("AAAA");
+	//this->SetMode();
+	Logger::getInstance().Debug("BBBB");
+	this->SetSSID();
+	Logger::getInstance().Debug("CCCC");
+	this->SetPWD();
+	Logger::getInstance().Debug("DDDD");
+	this->SetIp();
+}
+
+void ApplicationMenu::SetMode() {
+	if (SpiffsConfig::getInstance().Data->APEnabled) {
+		strncpy(this->wifiModeScreen->Mode, this->wifiModeScreen->AP, sizeof(this->wifiModeScreen->AP) / sizeof(char));
+	}
+	else {
+		strncpy(this->wifiModeScreen->Mode, this->wifiModeScreen->Client, sizeof(this->wifiModeScreen->Client) / sizeof(char));
+
+	}
+}
+
+void ApplicationMenu::SetSSID() {
+	this->wifiApDetailScreen->SSID = SpiffsConfig::getInstance().Data->APSSID;
+	this->wifiClientDetailScreen->SSID = SpiffsConfig::getInstance().Data->TargetSSID;
+}
+
+void ApplicationMenu::SetPWD() {
+	this->wifiApDetailScreen->PWD = SpiffsConfig::getInstance().Data->APPassword;
 }
 
 void ApplicationMenu::CleanLCDVariable() {
@@ -192,8 +225,9 @@ int ApplicationMenu::GetSeconds() {
 	return seconds;
 }
 
-void ApplicationMenu::SetSettingsIp(char * ip) {
-	this->settingScreen->Ip = ip;
+void ApplicationMenu::SetIp() {
+	this->wifiApDetailScreen->IP = (WebServer::getInstance().GetIp());
+	this->wifiClientDetailScreen->IP = (WebServer::getInstance().GetIp());
 }
 
 void ApplicationMenu::ResetTime() {
@@ -228,7 +262,7 @@ void Home_Do_A() {
 }
 
 void Home_Do_B() {
-	ApplicationMenu::getInstance().SetSettingsIp(WebServer::getInstance().GetIp());
+	ApplicationMenu::getInstance().UpdateSettingsVariable();
 	ApplicationMenu::getInstance().Navigate(SETTING_SCREEN);
 }
 
@@ -291,3 +325,38 @@ void Job_Do_D() {
 void Settings_Do_D() {
 	ApplicationMenu::getInstance().Navigate(HOME_SCREEN);
 }
+
+void Settings_Do_A() {
+	ApplicationMenu::getInstance().Navigate(WIFI_MODE_SCREEN);
+}
+
+void Settings_Do_B() {
+	
+	if (SpiffsConfig::getInstance().Data->APEnabled) {
+		ApplicationMenu::getInstance().Navigate(WIFI_AP_SCREEN);
+	}
+	else {
+		ApplicationMenu::getInstance().Navigate(WIFI_CLIENT_SCREEN);
+	}
+}
+
+void Wifi_Do_D() {
+	ApplicationMenu::getInstance().Navigate(SETTING_SCREEN);
+}
+
+void ToggleWifiMode(bool apMode) {
+	if (SpiffsConfig::getInstance().Data->APEnabled != apMode) {
+		SpiffsConfig::getInstance().Data->APEnabled = apMode;
+		//SpiffsConfig::getInstance().Save();
+		ApplicationMenu::getInstance().RequestRestart = true;
+	}
+}
+
+void Wifi_Mode_Do_A() {
+	ToggleWifiMode(true);
+}
+
+void Wifi_Mode_Do_B() {
+	ToggleWifiMode(false);
+}
+

@@ -30,6 +30,10 @@ public:
 		t->update();
 	}
 
+	void Stop() {
+		t->stop(0);
+	}
+
 	void DoOnTempTick() {
 		int analogValue = analogRead(GPIO::getInstance().TempSensorPin);
 		float millivolts = (analogValue / 1024.0) * 2826;

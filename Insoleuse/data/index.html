@@ -208,7 +208,7 @@
                                 <canvas id="tempGauge"
                                         data-type="linear-gauge"
                                         data-width="600"
-                                        data-height="120"
+                                        data-height="160"
                                         data-units="°C"
                                         data-min-value="0"
                                         data-max-value="160"
@@ -248,7 +248,6 @@
     </audio>
 
     <script src="jquery.min.js"></script>
-    <script src="industrial.js"></script>
     <script src="bootstrap.bundle.js"></script>
     <script src="moment-with-locales.min.js"></script>
     <script src="td-bt-4.min.js"></script>
@@ -319,8 +318,13 @@
 
         function UpdateTemp() {
             $.get("http://192.168.4.1/api/getTemperature", function (data2, status) {
-                console.log(data2.temperature);
-                document.gauges.get("tempGauge").value = data2.temperature;
+                console.log(parseFloat(data2.temperature));
+
+                document.gauges.forEach(function (gauge) {
+                    gauge.value = parseFloat(data2.temperature);
+                    gauge.options.units = data2.temperature + " °C";
+                    gauge.update();
+                });
             });
         }
 

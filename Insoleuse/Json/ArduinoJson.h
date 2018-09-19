@@ -1,8 +1,8 @@
 // ArduinoJson - arduinojson.org
 // Copyright Benoit Blanchon 2014-2018
 // MIT License
-
-#pragma once
+#ifndef _ARDUINO_JSON_h
+#define _ARDUINO_JSON_h
 
 #ifdef __cplusplus
 
@@ -3376,4 +3376,5 @@ using namespace ArduinoJson;
 
 #error ArduinoJson requires a C++ compiler, please change file extension to .cc or .cpp
 
+#endif
 #endif

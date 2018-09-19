@@ -25,6 +25,7 @@ public:
 	}
 	void Update();
 	void Init();
+	void Stop();
 
 	void DoHandleWebRequests();
 	void DoHandleRoot();
@@ -34,6 +35,7 @@ public:
 	void DoHandlePauseJob();
 	void DoHandleStartJob();
 	void DoHandleGetTemperature();
+
 
 	char* GetIp() {
 		myIP.toString().toCharArray(ipChar, 16);
@@ -46,9 +48,12 @@ private:
 
 	char* ipChar = "xxx.xxx.xxx.xxx";
 	IPAddress myIP;
-	ESP8266WebServer* server = new ESP8266WebServer(WEBSERVER_PORT);
+	ESP8266WebServer* server;
 	WebServer() { }
 	bool LoadFromSpiffs(String path);
+	void StartAP();
+	void StartServer();
+	void ConnectToWiFi();
 };
 
 #endif

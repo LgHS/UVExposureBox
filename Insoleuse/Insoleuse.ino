@@ -4,6 +4,7 @@
  Author:	istac
 */
 
+#include <FS.h>
 #include "GPIO.h"
 #include "WebServer.h"
 #include "ReedSwitchSecurity.h"
@@ -12,6 +13,7 @@
 #include <Wire.h>
 #include "Config.h"
 #include "TemperatureSensor.h"
+#include "SpiffsConfig.h"
 
 void setup()
 {
@@ -21,6 +23,8 @@ void setup()
 	Wire.begin();
 	Wire.beginTransmission(0x3F);
 	Wire.endTransmission();
+
+	SpiffsConfig::getInstance().Load();
 
 	ApplicationMenu::getInstance().Init();
 	ApplicationMenu::getInstance().Navigate(WELCOME_SCREEN);
@@ -40,6 +44,15 @@ void setup()
 	TemperatureSensor::getInstance().Start();
 }
 
+void restart() {
+	WebServer::getInstance().Stop();
+	Job::getInstance().Stop();
+	ReedSwitchSecurity::getInstance().Stop();
+	TemperatureSensor::getInstance().Stop();
+	SpiffsConfig::getInstance().Stop();
+	ESP.restart();
+}
+
 void loop()
 {
 	WebServer::getInstance().Update();
@@ -47,4 +60,8 @@ void loop()
 	Job::getInstance().Update();
 	ReedSwitchSecurity::getInstance().Update();
 	TemperatureSensor::getInstance().Update();
+
+	if (ApplicationMenu::getInstance().RequestRestart == true) {
+		restart();
+	}
 }
