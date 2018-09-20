@@ -38,7 +38,7 @@ void Job::Start() {
 }
 
 void Job::Stop() {
-	Logger::getInstance().Debug("Job::Stop()");
+	//Logger::getInstance().Debug("Job::Stop()");
 	if (!this->IsRunning) return;
 	UVStrip::getInstance().Stop();
 	t.stop(0);

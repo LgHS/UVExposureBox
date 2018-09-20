@@ -15,7 +15,7 @@
 
 void WebServer::Init() {
 	Logger::getInstance().Debug("WebServer::Init()");
-	if (!SpiffsConfig::getInstance().Data->APEnabled)
+	if (SpiffsConfig::getInstance().Data->APEnabled)
 		this->StartAP();
 	else
 		this->ConnectToWiFi();

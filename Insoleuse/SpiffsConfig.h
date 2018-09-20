@@ -28,6 +28,7 @@ public:
 	}
 
 	bool Load() {
+		
 		File configFile = SPIFFS.open("/config.json", "r");
 		if (!configFile) {
 			Logger::getInstance().Debug("Cant' open config");
@@ -40,6 +41,16 @@ public:
 			return false;
 		}
 
+		String debugLogData;
+		while (configFile.available()) {
+			debugLogData += char(configFile.read());
+		}
+		configFile.close();
+
+		Serial.println(debugLogData);
+
+		configFile = SPIFFS.open("/config.json", "r");
+
 		std::unique_ptr<char[]> buf(new char[size]);
 
 		configFile.readBytes(buf.get(), size);
@@ -48,6 +59,8 @@ public:
 		DynamicJsonBuffer jsonBuffer(bufferSize);
 
 		JsonObject& json = jsonBuffer.parseObject(buf.get());
+
+		configFile.close();
 
 		if (json.success()) {
 			strncpy(this->Data->TargetSSID, json["target_ssid"], 9);
@@ -60,7 +73,6 @@ public:
 			Logger::getInstance().Debug("Can't parse json");
 			return false;
 		}
-
 		return true;
 	}
 
@@ -70,8 +82,8 @@ public:
 
 		json["target_ssid"] = this->Data->TargetSSID;
 		json["target_pwd"] = this->Data->TargetPassword;
-		json["target_ssid"] = this->Data->APPassword;
-		json["target_pwd"] = this->Data->TargetPassword;
+		json["ap_ssid"] = this->Data->APSSID;
+		json["ap_pwd"] = this->Data->APPassword;
 		json["ap_state"] = this->Data->APEnabled;
 
 		File configFile = SPIFFS.open("/config.json", "w");
@@ -81,6 +93,9 @@ public:
 		}
 
 		json.printTo(configFile);
+
+		configFile.flush();
+		configFile.close();
 		return true;
 	}
 

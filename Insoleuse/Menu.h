@@ -123,8 +123,8 @@ public:
 
 class SettingScreen {
 private:
-	LiquidLine* setting_line1 = new LiquidLine(0, 0, "A: Mode");
-	LiquidLine* setting_line3 = new LiquidLine(0, 1, "B: Detail");
+	LiquidLine* setting_line1 = new LiquidLine(0, 0, "A:Mode");
+	LiquidLine* setting_line3 = new LiquidLine(0, 1, "B:Detail");
 	LiquidLine* setting_line2 = new LiquidLine(0, 2, "");
 	LiquidLine* setting_line4 = new LiquidLine(0, 3, "D:Return");
 public:

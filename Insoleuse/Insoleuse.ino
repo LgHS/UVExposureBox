@@ -24,11 +24,11 @@ void setup()
 	Wire.beginTransmission(0x3F);
 	Wire.endTransmission();
 
-	SpiffsConfig::getInstance().Load();
-
 	ApplicationMenu::getInstance().Init();
 	ApplicationMenu::getInstance().Navigate(WELCOME_SCREEN);
 
+	SpiffsConfig::getInstance().Load();
+	
 	GPIO::getInstance().Init();
 
 	ReedSwitchSecurity::getInstance().Init();
@@ -36,12 +36,10 @@ void setup()
 	
 	WebServer::getInstance().Init();
 
-	delay(2000);
-
-	ApplicationMenu::getInstance().Navigate(HOME_SCREEN);
-
 	ReedSwitchSecurity::getInstance().Start();
 	TemperatureSensor::getInstance().Start();
+	
+	ApplicationMenu::getInstance().Navigate(HOME_SCREEN);
 }
 
 void restart() {

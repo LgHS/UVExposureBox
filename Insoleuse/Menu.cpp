@@ -86,23 +86,18 @@ void ApplicationMenu::SetTemp(char* temp) {
 }
 
 void ApplicationMenu::UpdateSettingsVariable() {
-	Logger::getInstance().Debug("AAAA");
-	//this->SetMode();
-	Logger::getInstance().Debug("BBBB");
+	this->SetMode();
 	this->SetSSID();
-	Logger::getInstance().Debug("CCCC");
 	this->SetPWD();
-	Logger::getInstance().Debug("DDDD");
 	this->SetIp();
 }
 
 void ApplicationMenu::SetMode() {
 	if (SpiffsConfig::getInstance().Data->APEnabled) {
-		strncpy(this->wifiModeScreen->Mode, this->wifiModeScreen->AP, sizeof(this->wifiModeScreen->AP) / sizeof(char));
+		this->wifiModeScreen->Mode = this->wifiModeScreen->AP;
 	}
 	else {
-		strncpy(this->wifiModeScreen->Mode, this->wifiModeScreen->Client, sizeof(this->wifiModeScreen->Client) / sizeof(char));
-
+		this->wifiModeScreen->Mode = this->wifiModeScreen->Client;
 	}
 }
 
@@ -347,7 +342,7 @@ void Wifi_Do_D() {
 void ToggleWifiMode(bool apMode) {
 	if (SpiffsConfig::getInstance().Data->APEnabled != apMode) {
 		SpiffsConfig::getInstance().Data->APEnabled = apMode;
-		//SpiffsConfig::getInstance().Save();
+		SpiffsConfig::getInstance().Save();
 		ApplicationMenu::getInstance().RequestRestart = true;
 	}
 }
