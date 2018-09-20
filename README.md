@@ -20,6 +20,12 @@ To upload files to rom I use this tool: https://github.com/esp8266/arduino-esp82
 
 ![alt text](https://github.com/LgHS/UVPlatesetter/blob/master/img/jobrunning.PNG)
 
+# External Tool
+
+ - ESP8266 exception decoder: https://github.com/me-no-dev/EspExceptionDecoder
+ - ESP8266 exception decoder CLI: https://github.com/littleyoda/EspStackTraceDecoder
+ - SPIFFS upload tool: https://github.com/esp8266/arduino-esp8266fs-plugin
+
 # External Library 
 I use the following libraries for the code:
  - Wire
