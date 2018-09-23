@@ -197,7 +197,7 @@
                 </div>
             </div>
         </div>
-               
+
         <div class="row hidden" style="margin-top: 15px;" id="temp">
             <div class="col-sm-12">
                 <div class="card">
@@ -252,14 +252,15 @@
     <script src="moment-with-locales.min.js"></script>
     <script src="td-bt-4.min.js"></script>
     <script src="gauge.min.js"></script>
+    <script src="notify.js"></script>
 
-    <!--<script src="bootstrap-datetimepicker.min.js"></script>-->
 
     <script>
 
         var refreshOn = true;
         var lastTime;
         var lastState;
+        var notificationOn = false;
 
         window.setInterval(UpdateRemainingTime, 1000);
         window.setInterval(UpdateState, 1000);
@@ -286,6 +287,24 @@
             } else {
                 $("#startJobBtn").attr('disabled', 'disabled');
             }
+        });
+
+        if (!Notify.needsPermission) {
+            notificationOn = true;
+        } else if (Notify.isSupported()) {
+            Notify.requestPermission(onPermissionGranted, onPermissionDenied);
+        }
+
+        function onPermissionGranted() {
+            notificationOn = true;
+        }
+
+        function onPermissionDenied() {
+            notificationOn = false;
+        }
+
+        var jobDoneNotification = new Notify('Job Done !', {
+            body: 'Your job has completed.'
         });
 
         function GetSeconds() {
@@ -354,8 +373,11 @@
                     }
                 }
                 else {
-                    if (lastState == "run")
+                    if (lastState == "run") {
                         $('#notification')[0].play();
+                        if (notificationOn)
+                            jobDoneNotification.show();
+                    }
                     $("#idle").show();
                     Enable('#startjob');
                 }
