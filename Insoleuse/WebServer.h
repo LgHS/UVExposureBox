@@ -16,6 +16,7 @@ void HandleGetTemperature();
 void HandleCancelJob();
 void HandlePauseJob();
 void HandleStartJob();
+void HandleGetVersion();
 
 class WebServer {
 public:
@@ -35,7 +36,7 @@ public:
 	void DoHandlePauseJob();
 	void DoHandleStartJob();
 	void DoHandleGetTemperature();
-
+	void DoHandleGetVersion();
 
 	char* GetIp() {
 		myIP.toString().toCharArray(ipChar, 16);
@@ -53,7 +54,7 @@ private:
 	bool LoadFromSpiffs(String path);
 	void StartAP();
 	void StartServer();
-	void ConnectToWiFi();
+	bool ConnectToWiFi();
 };
 
 #endif

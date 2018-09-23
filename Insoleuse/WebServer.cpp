@@ -15,30 +15,37 @@
 
 void WebServer::Init() {
 	Logger::getInstance().Debug("WebServer::Init()");
-	if (SpiffsConfig::getInstance().Data->APEnabled)
+	if (SpiffsConfig::getInstance().Data->APEnabled || !this->ConnectToWiFi())
 		this->StartAP();
-	else
-		this->ConnectToWiFi();
 	this->StartServer();
 }
 
-void WebServer::ConnectToWiFi() {
-
-	Logger::getInstance().Debug("Connect to WiFi");
+bool WebServer::ConnectToWiFi() {
+	int retryCount = 0;
+	Logger::getInstance().Debug("Connect to WiFi SSID:" + String(SpiffsConfig::getInstance().Data->TargetSSID) + " PWD:" + String(SpiffsConfig::getInstance().Data->TargetPassword));
 	WiFi.mode(WIFI_STA);
 	WiFi.begin(SpiffsConfig::getInstance().Data->TargetSSID, SpiffsConfig::getInstance().Data->TargetPassword);
 	while (WiFi.status() != WL_CONNECTED) {
 		delay(500);
 		Serial.print(".");
+		retryCount += 1;
+		if (retryCount == WIFI_RETRY_COUNT) {
+			return false;
+		}
 	}
 	this->myIP = WiFi.localIP();
-	Logger::getInstance().Debug("Connected");
+	Logger::getInstance().Debug("Connected IP:" + this->myIP.toString());
+	SpiffsConfig::getInstance().Data->APEnabled = false;
+	return true;
 }
 
 void WebServer::StartAP() {
+	Logger::getInstance().Debug("Create WiFi SSID:" + String(SpiffsConfig::getInstance().Data->APSSID) + " PWD:" + String(SpiffsConfig::getInstance().Data->APPassword));
 	WiFi.mode(WIFI_AP);
 	WiFi.softAP(SpiffsConfig::getInstance().Data->APSSID, SpiffsConfig::getInstance().Data->APPassword);
 	this->myIP = WiFi.softAPIP();
+	Logger::getInstance().Debug("Connected IP:" + this->myIP.toString());
+	SpiffsConfig::getInstance().Data->APEnabled = true;
 }
 
 void WebServer::StartServer() {
@@ -140,7 +147,6 @@ void WebServer::DoHandleGetRemainingTime() {
 		getRemainingTimeResponse = "";
 		root.printTo(getRemainingTimeResponse);
 	}
-
 	this->server->send(200, "text/json", getRemainingTimeResponse);
 }
 
@@ -194,6 +200,19 @@ void WebServer::DoHandleStartJob() {
 	this->server->send(200, "text / plain", "");
 }
 
+void WebServer::DoHandleGetVersion() {
+	Logger::getInstance().Debug("WebServer::HandleGetVersion()");
+
+	StaticJsonBuffer<200> jsonBuffer;
+
+	JsonObject& root = jsonBuffer.createObject();
+	root["version"] = VERSION;
+
+	String versionMessage;
+	root.printTo(versionMessage);
+	this->server->send(200, "text/json", versionMessage);
+}
+
 void HandleWebRequests() {
 	WebServer::getInstance().DoHandleWebRequests();
 }
@@ -228,4 +247,8 @@ void HandleGetTemperature() {
 
 void OnTemperatureTick() {
 	TemperatureSensor::getInstance().DoOnTempTick();
+}
+
+void HandleGetVersion() {
+	WebServer::getInstance().DoHandleGetVersion();
 }

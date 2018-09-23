@@ -30,6 +30,7 @@ void ApplicationMenu::Init() {
 	this->menu->add_screen(*this->jobScreen->Screen);
 	this->menu->add_screen(*this->wifiModeScreen->Screen);
 	this->menu->add_screen(*this->wifiApDetailScreen->Screen);
+	this->menu->add_screen(*this->wifiClientDetailScreen->Screen);
 	
 	this->menu->update();
 
@@ -326,13 +327,18 @@ void Settings_Do_A() {
 }
 
 void Settings_Do_B() {
-	
 	if (SpiffsConfig::getInstance().Data->APEnabled) {
 		ApplicationMenu::getInstance().Navigate(WIFI_AP_SCREEN);
 	}
 	else {
 		ApplicationMenu::getInstance().Navigate(WIFI_CLIENT_SCREEN);
 	}
+}
+
+void Settings_Do_C() {
+	SpiffsConfig::getInstance().LoadDefault();
+	SpiffsConfig::getInstance().Save();
+	ApplicationMenu::getInstance().RequestRestart = true;
 }
 
 void Wifi_Do_D() {

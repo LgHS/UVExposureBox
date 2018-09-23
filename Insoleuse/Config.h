@@ -6,7 +6,7 @@
 #define I2CADDR_MCP23017 0x20
 #define I2CADDR_LCD 0x3F
 
-#define VERSION "2.0.2"
+#define VERSION "2.0.3"
 
 #define KEYPAD_ROW 4
 #define KEYPAD_COL 4
@@ -32,8 +32,11 @@
 #define DEBUG true
 
 #define WEBSERVER_PORT 80
-#define WEBSERVER_SSID "InsoleuseV2"
-#define WEBSERVER_PWD "lghs42!$"
+
+#define CONFIG_FILE_PATH "/config.json"
+#define DEFAULT_CONFIG_FILE_PATH "/default.json"
+
+#define WIFI_RETRY_COUNT 30
 
 #endif
 

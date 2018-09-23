@@ -79,6 +79,7 @@
     <None Include="data\config.json">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="data\default.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.Insoleuse.vsarduino.h">

@@ -47,6 +47,7 @@ void Start_Do_D8();
 void Start_Do_D9();
 void Job_Do_D();
 void Job_Do_C();
+void Settings_Do_C();
 void Settings_Do_D();
 void Settings_Do_A();
 void Settings_Do_B();
@@ -125,13 +126,14 @@ class SettingScreen {
 private:
 	LiquidLine* setting_line1 = new LiquidLine(0, 0, "A:Mode");
 	LiquidLine* setting_line3 = new LiquidLine(0, 1, "B:Detail");
-	LiquidLine* setting_line2 = new LiquidLine(0, 2, "");
+	LiquidLine* setting_line2 = new LiquidLine(0, 2, "C:Reset");
 	LiquidLine* setting_line4 = new LiquidLine(0, 3, "D:Return");
 public:
 	LiquidScreen* Screen = new LiquidScreen(*setting_line1, *setting_line2, *setting_line3, *setting_line4);
 	SettingScreen() {
 		this->Screen->attach_function(KPA, Settings_Do_A);
 		this->Screen->attach_function(KPB, Settings_Do_B);
+		this->Screen->attach_function(KPC, Settings_Do_C);
 		this->Screen->attach_function(KPD, Settings_Do_D);
 	}
 };
