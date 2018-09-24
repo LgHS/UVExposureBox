@@ -16,9 +16,7 @@ To upload files to rom I use this tool: https://github.com/esp8266/arduino-esp82
 
 # Web Portal Screenshot
 
-![alt text](https://github.com/LgHS/UVPlatesetter/blob/master/img/startjob.PNG)
-
-![alt text](https://github.com/LgHS/UVPlatesetter/blob/master/img/jobrunning.PNG)
+![alt text](https://github.com/LgHS/UVPlatesetter/blob/master/img/screen.PNG)
 
 # External Tool
 
