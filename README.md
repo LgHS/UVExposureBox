@@ -14,7 +14,11 @@ Diagrams are made with KiCad (free and open source, http://kicad-pcb.org/downloa
 
 To upload files to rom I use this tool: https://github.com/esp8266/arduino-esp8266fs-plugin/releases/download/0.1.3/ESP8266FS-0.1.3.zip, for more information about how to install and use it to read this article: https://circuits4you.com/2018/01/31/upload-image-png-jpeg-to-esp8266-web-page/
 
-# Web Portal Screenshot
+# Web Portal
+
+ - Monitor and launch jobs
+ - Monitor temperature
+ - Configure wifi, reset factory defaults
 
 ![alt text](https://github.com/LgHS/UVPlatesetter/blob/master/img/screen.PNG)
 
