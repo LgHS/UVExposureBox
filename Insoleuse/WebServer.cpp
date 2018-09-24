@@ -54,6 +54,8 @@ void WebServer::StartServer() {
 	this->server->on("/api/getRemainingTime", HandleGetRemainingTime);
 	this->server->on("/api/getState", HandleGetState);
 	this->server->on("/api/getTemperature", HandleGetTemperature);
+	this->server->on("/api/getVersion", HandleGetVersion);
+	this->server->on("/api/getConfig", HandleGetConfig);
 	this->server->on("/api/pause", HandlePauseJob);
 	this->server->on("/api/cancel", HandleCancelJob);
 	this->server->on("/api/start", HandleStartJob);
@@ -202,7 +204,6 @@ void WebServer::DoHandleStartJob() {
 
 void WebServer::DoHandleGetVersion() {
 	Logger::getInstance().Debug("WebServer::HandleGetVersion()");
-
 	StaticJsonBuffer<200> jsonBuffer;
 
 	JsonObject& root = jsonBuffer.createObject();
@@ -211,6 +212,23 @@ void WebServer::DoHandleGetVersion() {
 	String versionMessage;
 	root.printTo(versionMessage);
 	this->server->send(200, "text/json", versionMessage);
+}
+
+void WebServer::DoHandleGetConfig() {
+	Logger::getInstance().Debug("WebServer::HandleGetConfig()");
+
+	StaticJsonBuffer<200> jsonBuffer;
+
+	JsonObject& root = jsonBuffer.createObject();
+	root["target_ssid"] = SpiffsConfig::getInstance().Data->TargetSSID;
+	root["target_pwd"] = SpiffsConfig::getInstance().Data->TargetPassword;
+	root["ap_ssid"] = SpiffsConfig::getInstance().Data->APSSID;
+	root["ap_pwd"] = SpiffsConfig::getInstance().Data->APPassword;
+	root["ap_state"] = SpiffsConfig::getInstance().Data->APEnabled;
+
+	String message;
+	root.printTo(message);
+	this->server->send(200, "text/json", message);
 }
 
 void HandleWebRequests() {
@@ -251,4 +269,8 @@ void OnTemperatureTick() {
 
 void HandleGetVersion() {
 	WebServer::getInstance().DoHandleGetVersion();
+}
+
+void HandleGetConfig() {
+	WebServer::getInstance().DoHandleGetConfig();
 }

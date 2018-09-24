@@ -5,7 +5,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Insoleuse V2</title>
+    <title id="headerTitle">UV Exposure Box</title>
 
     <link rel="stylesheet" href="bootstrap-reboot.css">
     <link rel="stylesheet" href="bootstrap.min.css">
@@ -99,7 +99,7 @@
     <main class="container" role="main" id="container">
         <div class="row" style="margin-top: 20px">
             <div class="col-sm-8 my-auto">
-                <h1>Insoleuse v2.0.2</h1>
+                <h1 id="title">UV Exposure Box</h1>
             </div>
             <div class="col-sm-4">
                 <img src="logo.svg"
@@ -234,6 +234,49 @@
                 </div>
             </div>
         </div>
+
+        <div class="row hidden" style="margin-top: 15px;" id="config">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">Wifi Configuration</div>
+                    <div class="card-body card-text">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                                            <div class="input-group-prepend">
+                                                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="mode">
+                                                    <label class="btn btn-secondary" id="apMode">
+                                                        <input type="radio" name="ap"> AP
+                                                    </label>
+                                                    <label class="btn btn-secondary" id="clientMode">
+                                                        <input type="radio" name="client"> Client
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon3">SSID</span>
+                                            </div>
+                                            <input type="text" class="form-control" id="ap_ssid" placeholder="AP SSID" />
+                                            <input type="text" class="form-control" id="client_ssid" placeholder="Client SSID" />
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon3">Password</span>
+                                            </div>
+                                            <input type="text" class="form-control" id="ap_password" placeholder="AP Password" />
+                                            <input type="text" class="form-control" id="client_password" placeholder="Client Password" />
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-success" id="apply">Apply</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer class="footer">
@@ -258,9 +301,12 @@
     <script>
 
         var refreshOn = true;
+        var apMode = false;
         var lastTime;
         var lastState;
         var notificationOn = false;
+        var baseUrl = "http://192.168.4.1";
+        var title = "UV Exposure Box v";
 
         window.setInterval(UpdateRemainingTime, 1000);
         window.setInterval(UpdateState, 1000);
@@ -289,11 +335,21 @@
             }
         });
 
+        $('#mode :input').change(function () {
+            let newValue = (this.name == 'ap');
+            if (newValue == apMode) return;
+            apMode = newValue;
+            UpdateMode(false);
+        });
+
         if (!Notify.needsPermission) {
             notificationOn = true;
         } else if (Notify.isSupported()) {
             Notify.requestPermission(onPermissionGranted, onPermissionDenied);
         }
+
+        UpdateVersion();
+        UpdateConfig();
 
         function onPermissionGranted() {
             notificationOn = true;
@@ -302,10 +358,6 @@
         function onPermissionDenied() {
             notificationOn = false;
         }
-
-        var jobDoneNotification = new Notify('Job Done !', {
-            body: 'Your job has completed.'
-        });
 
         function GetSeconds() {
             let time = 0;
@@ -316,15 +368,15 @@
         }
 
         function Start() {
-            $.get("http://192.168.4.1/api/start?time=" + GetSeconds(), function (data, status) { });
+            $.get(baseUrl + "/api/start?time=" + GetSeconds(), function (data, status) { });
         }
 
         function Pause() {
-            $.get("http://192.168.4.1/api/pause", function (data, status) { });
+            $.get(baseUrl + "/api/pause", function (data, status) { });
         }
 
         function Cancel() {
-            $.get("http://192.168.4.1/api/cancel", function (data, status) { });
+            $.get(baseUrl + "/api/cancel", function (data, status) { });
         }
 
         function Enable(target) {
@@ -336,9 +388,7 @@
         }
 
         function UpdateTemp() {
-            $.get("http://192.168.4.1/api/getTemperature", function (data2, status) {
-                console.log(parseFloat(data2.temperature));
-
+            $.get(baseUrl + "/api/getTemperature", function (data2, status) {
                 document.gauges.forEach(function (gauge) {
                     gauge.value = parseFloat(data2.temperature);
                     gauge.options.units = data2.temperature + " °C";
@@ -348,7 +398,7 @@
         }
 
         function UpdateState() {
-            $.get("http://192.168.4.1/api/getState", function (data2, status) {
+            $.get(baseUrl + "/api/getState", function (data2, status) {
                 $("#loadingJob").hide();
                 $("#running").hide();
                 $("#paused").hide();
@@ -359,6 +409,7 @@
 
                 Disable('#job');
                 Disable('#startjob');
+                Disable('#config');
 
                 if (data2.running == "run" || data2.running == "pause") {
                     Enable('#job');
@@ -366,8 +417,11 @@
                         $("#pause").show();
                         $("#running").show();
                         $("#loadingJob").show();
+                        UpdateTitle('Running');
+
                     }
                     else {
+                        UpdateTitle('Paused');
                         $("#continue").show();
                         $("#paused").show();
                     }
@@ -375,11 +429,17 @@
                 else {
                     if (lastState == "run") {
                         $('#notification')[0].play();
-                        if (notificationOn)
+                        if (notificationOn) {
+                            let jobDoneNotification = new Notify(title, {
+                                body: 'Your job has completed.'
+                            });
                             jobDoneNotification.show();
+                        }
                     }
                     $("#idle").show();
+                    Enable('#config')
                     Enable('#startjob');
+                    UpdateTitle('Idle');
                 }
                 Enable('#status');
                 Enable('#temp');
@@ -390,7 +450,7 @@
         }
 
         function UpdateRemainingTime() {
-            $.get("http://192.168.4.1/api/getRemainingTime",
+            $.get(baseUrl + "/api/getRemainingTime",
                 function (data, status) {
                     let time = data.remainingTime / data.refreshRate;
                     lastTime = time;
@@ -403,6 +463,58 @@
                     $("#remainingTime").val(pad(hours, 2) + ":" + pad(min, 2) + ":" + pad(sec, 2));
                 }
             );
+        }
+
+        function UpdateVersion() {
+            $.get(baseUrl + "/api/getVersion",
+                function (data, status) {
+                    title += data.version;
+                    UpdateTitle('');
+                }
+            );
+        }
+
+        function UpdateTitle(message) {
+            $("#title").html(title);
+            if (message == '')
+                $("#headerTitle").html(title);
+            else
+                $("#headerTitle").html(title + ' - ' + message);
+        }
+
+        function UpdateConfig() {
+            $.get(baseUrl + "/api/getConfig",
+                function (data, status) {
+                    console.log(data);
+                    apMode = data.ap_state;
+                    UpdateMode(true); 
+                    
+                    $('#ap_ssid').val(data.ap_ssid);
+                    $('#ap_password').val(data.ap_pwd);
+                    $('#client_ssid').val(data.target_ssid);
+                    $('#client_password').val(data.target_pwd);
+                }
+            );
+        }
+
+        function UpdateMode(updateButton) {
+            $('#ap_ssid').hide();
+            $('#ap_password').hide();
+            $('#client_ssid').hide();
+            $('#client_password').hide();
+
+            if (apMode) {
+                if (updateButton)
+                    $('#apMode').button('toggle')
+                $('#ap_ssid').show();
+                $('#ap_password').show();
+            }
+            else {
+                if (updateButton)
+                    $('#clientMode').button('toggle')
+                $('#client_ssid').show();
+                $('#client_password').show();
+            }
         }
 
         function pad(num, size) {

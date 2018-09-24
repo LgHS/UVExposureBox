@@ -17,6 +17,7 @@ void HandleCancelJob();
 void HandlePauseJob();
 void HandleStartJob();
 void HandleGetVersion();
+void HandleGetConfig();
 
 class WebServer {
 public:
@@ -37,6 +38,7 @@ public:
 	void DoHandleStartJob();
 	void DoHandleGetTemperature();
 	void DoHandleGetVersion();
+	void DoHandleGetConfig();
 
 	char* GetIp() {
 		myIP.toString().toCharArray(ipChar, 16);
